@@ -1066,7 +1066,7 @@ class MediaWiki {
 			// The client should not be blocked on "post-send" updates. If apache or ob_* decide
 			// that a response should be gzipped, the entire script will have to finish before
 			// any data can be sent. Disable compression if there are any post-send updates.
-			$response->header( 'Content-Encoding: identity' );
+			// $response->header( 'Content-Encoding: identity' ); // Fix https://www.mediawiki.org/wiki/Topic:Vzxi8uroe2eo23gk
 			AtEase\AtEase::suppressWarnings();
 			ini_set( 'zlib.output_compression', 0 );
 			if ( function_exists( 'apache_setenv' ) ) {
