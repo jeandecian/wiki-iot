@@ -142,35 +142,27 @@ $wgGroupPermissions['*']['createpage'] = false;
 $wgGroupPermissions['user']['createpage'] = true;
 $wgGroupPermissions['*']['edit'] = false;
 
-# https://www.mediawiki.org/wiki/Extension:Admin_Links
 wfLoadExtension('AdminLinks');
 $wgGroupPermissions['sysop']['adminlinks'] = true;
 
-# https://www.mediawiki.org/wiki/Extension:Approved_Revs
 wfLoadExtension('ApprovedRevs');
 $wgGroupPermissions['*']['viewlinktolatest'] = false;
 $wgGroupPermissions['sysop']['viewlinktolatest'] = true;
 $egApprovedRevsBlankIfUnapproved = true;
 
-# https://github.com/SkizNet/mediawiki-GTag
 wfLoadExtension('GTag');
 $wgGroupPermissions['sysop']['gtag-exempt'] = true;
 
 wfLoadExtension('InputBox'); # https://www.mediawiki.org/wiki/Extension:InputBox
-
-# https://www.mediawiki.org/wiki/Extension:Lockdown
 wfLoadExtension('Lockdown');
 $wgActionLockdown['history'] = ['sysop'];
 
-wfLoadExtension('NewestPages'); # https://www.mediawiki.org/wiki/Extension:Newest_Pages
-wfLoadExtension('PageForms'); # https://www.mediawiki.org/wiki/Extension:Page_Forms
-
-# https://www.mediawiki.org/wiki/Extension:Report
+wfLoadExtension('NewestPages');
+wfLoadExtension('PageForms');
 wfLoadExtension('Report');
 $wgGroupPermissions['*']['viewedittab'] = false;
 $wgGroupPermissions['sysop']['viewedittab'] = true;
 
-# https://github.com/somadeaki/RestrictEmailDomain
 wfLoadExtension('RestrictEmailDomain');
 $wgEmailDomain = array_merge(file("universities_domains.txt"), file("custom_domains.txt"));
 $wgAuthManagerAutoConfig['preauth'] = [
