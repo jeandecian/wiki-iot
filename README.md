@@ -1,33 +1,69 @@
-# MediaWiki
+# Wiki-IoT
 
-MediaWiki is a free and open-source wiki software package written in PHP. It
-serves as the platform for Wikipedia and the other Wikimedia projects, used
-by hundreds of millions of people each month. MediaWiki is localised in over
-350 languages and its reliability and robust feature set have earned it a large
-and vibrant community of third-party users and developers.
+## Installation
 
-MediaWiki is:
+### Requirements
 
-* feature-rich and extensible, both on-wiki and with hundreds of extensions;
-* scalable and suitable for both small and large sites;
-* simple to install, working on most hardware/software combinations; and
-* available in your language.
+- Web server
+- PHP : `PHP 7.3.19+` or `PHP 7.4.3+`
+- Database : `MySQL 5.5.8+` or `MariaDB 5.1+`
 
-For system requirements, installation, and upgrade details, see the files
-RELEASE-NOTES, INSTALL, and UPGRADE.
+[Manual:Installation requirements](https://www.mediawiki.org/wiki/Manual:Installation_requirements)
 
-* Ready to get started?
-** https://www.mediawiki.org/wiki/Special:MyLanguage/Download
-* Looking for the technical manual?
-** https://www.mediawiki.org/wiki/Special:MyLanguage/Manual:Contents
-* Seeking help from a person?
-** https://www.mediawiki.org/wiki/Special:MyLanguage/Communication
-* Looking to file a bug report or a feature request?
-** https://bugs.mediawiki.org/
-* Interested in helping out?
-** https://www.mediawiki.org/wiki/Special:MyLanguage/How_to_contribute
+### Installation
 
-MediaWiki is the result of global collaboration and cooperation. The CREDITS
-file lists technical contributors to the project. The COPYING file explains
-MediaWiki's copyright and license (GNU General Public License, version 2 or
-later). Many thanks to the Wikimedia community for testing and suggestions.
+1. Clone the project in your web server.
+```bash
+git clone git@github.com:jeandecian/crim-wiki-iot.git wiki-iot
+```
+
+2. If you already have a database server and know the root password for it, skip to step 3. Otherwise, follow the manual : [Manual:Installing MediaWiki - Create a database](https://www.mediawiki.org/wiki/Manual:Installing_MediaWiki#Create_a_database).
+
+3. Open a web browser to the `index.php` URL and complete the installation. A `LocalSettings.php` will be generated when the installation is completed.
+
+### Configuration
+
+In the project directory :
+- Duplicate the file `SettingsVariables.php.example` and rename it `SettingsVariables.php`. Fill the variables with values from the generated `LocalSettings.php` file.
+- Duplicate the file `LocalSettings.php.example` and rename it `LocalSettings.php`.
+
+## Upgrade
+
+### Preparation
+
+Put the wiki on read-only mode by uncommenting the following line in `LocalSettings.php`.
+```php
+$wgReadOnly = 'Maintenance is underway. Website is on read-only mode';
+```
+Comment back the line when the upgrade is finished.
+
+### Backup
+
+- Database
+- `extensions/`
+- `images/`
+- `includes/skins/SkinTemplate.php`
+- `resources/src/mediawiki.special.createaccount/signup.js`
+- `skins/`
+- `README.md`
+
+### Download
+
+[Download the latest release of MediaWiki](https://www.mediawiki.org/wiki/Download) as a tarball (tar.gz file).
+
+Unpack the package and copy its content to the wiki. New files should overwrite existing files.
+```bash
+tar xvzf PATH_TO_TARBALL -C PATH_TO_WIKI --strip-components=1
+```
+
+### Restore
+
+Since, some modified files has been overwritten, we need to restore them :
+- `includes/skins/SkinTemplate.php`
+- `resources/src/mediawiki.special.createaccount/signup.js`
+- `README.md`
+
+### Verification
+
+- Check if the website is running fine
+- Check the version in MediaWiki special page `Special:Version`
