@@ -156,6 +156,10 @@ $wgGroupPermissions['sysop']['gtag-exempt'] = true;
 wfLoadExtension('InputBox'); # https://www.mediawiki.org/wiki/Extension:InputBox
 wfLoadExtension('Lockdown');
 $wgActionLockdown['history'] = ['sysop'];
+$wgSpecialPageLockdown['Activeusers'] = ['sysop'];
+$wgSpecialPageLockdown['Contributions'] = ['sysop'];
+$wgSpecialPageLockdown['Listusers'] = ['sysop'];
+$wgSpecialPageLockdown['Log'] = ['sysop'];
 $wgSpecialPageLockdown['Recentchanges'] = ['sysop'];
 
 wfLoadExtension('NewestPages');
