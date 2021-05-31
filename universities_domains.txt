@@ -398,6 +398,7 @@ emmanuel.edu
 emory.edu
 emporia.edu
 ecc.edu
+etbu.edu
 evergreen.edu
 fdu.edu
 fairmontstate.edu
@@ -519,6 +520,7 @@ jbu.edu
 jfku.edu
 jh.edu
 jhu.edu
+johnshopkins.edu
 jhuapl.edu
 jwu.edu
 jbc.edu
@@ -745,6 +747,7 @@ pcci.edu
 pensacolastate.edu
 pepperdine.edu
 peru.edu
+pfw.edu
 philau.edu
 phillips.edu
 pittstate.edu
@@ -987,6 +990,7 @@ ucdavis.edu
 uci.edu
 ucla.edu
 ucmerced.edu
+ucop.edu
 ucr.edu
 ucsd.edu
 ucsf.edu
@@ -995,6 +999,7 @@ ucsc.edu
 uca.edu
 ucf.edu
 ucmo.edu
+uchastings.edu
 uchaswv.edu
 uchicago.edu
 uc.edu
@@ -1040,6 +1045,7 @@ umm.maine.edu
 umpi.maine.edu
 maine.edu
 umaryland.edu
+mayo.edu
 umbc.edu
 umd.edu
 umes.edu
@@ -1094,6 +1100,7 @@ seas.upenn.edu
 phoenix.edu
 pitt.edu
 upj.pitt.edu
+upb.pitt.edu
 up.edu
 upr.edu
 ups.edu
@@ -1508,6 +1515,7 @@ uq.edu.au
 usc.edu.au
 usq.edu.au
 sydney.edu.au
+usyd.edu.au
 uni.sydney.edu.au
 utas.edu.au
 uts.edu.au
@@ -2438,6 +2446,7 @@ gzu.edu.cn
 hainnu.edu.cn
 hainu.edu.cn
 hbafa.com
+hbu.edu
 hbu.edu.cn
 hdpu.edu.cn
 hebau.edu.cn
@@ -2999,6 +3008,7 @@ ute.edu.do
 utesa.edu
 utesur.edu.do
 brookdale.edu.ec
+brookings.edu
 casagrande.edu.ec
 epn.edu.ec
 espe.edu.ec
@@ -3338,6 +3348,7 @@ insa-tlse.fr
 inseec.fr
 int-evry.fr
 iota.u-psud.fr
+ircam.fr
 ireste.fr
 isab.fr
 isa.fupl.asso.fr
@@ -6301,7 +6312,8 @@ uvt.edu.mx
 uxac.edu.mx
 ver.ucc.mx
 westhill.edu.mx
-www-azc.uam.mx
+azc.uam.mx
+itsoeh.edu.mx
 ase.md
 kdu.md
 uasm.md
@@ -7057,6 +7069,7 @@ ub.edu.pl
 uj.edu.pl
 uksw.edu.pl
 umcs.lublin.pl
+wsei.lublin.pl
 uni.lodz.pl
 uni.opole.pl
 uni.torun.pl
@@ -7314,6 +7327,7 @@ gturp.spb.ru
 gubkin.ru
 gukit.ru
 guu.ru
+herzen.edu.ru
 herzen.spb.ru
 hse.ru
 iate.obninsk.ru
@@ -8669,6 +8683,8 @@ wimbledon.ac.uk
 wlv.ac.uk
 worc.ac.uk
 york.ac.uk
+middlesbro.ac.uk
+mbro.ac.uk
 claeh.edu.uy
 ort.edu.uy
 ucu.edu.uy
@@ -9858,6 +9874,7 @@ cust.edu.cn
 ieec.cust.edu.cn
 polk.edu
 mohawkcollege.ca
+bdeb.qc.ca
 brescia.edu
 rsu.edu
 neumann.edu
@@ -9888,6 +9905,7 @@ ontariotechu.net
 hsu.edu.hk
 htl-villach.at
 edu.htl-villach.at
+htl-wels.at
 udb.ac.id
 jedlik.eu
 students.jedlik.eu
@@ -9897,3 +9915,4 @@ al.infnet.edu.br
 prof.infnet.edu.br
 ssst.edu.ba
 hbc.edu.cn
+fom-net.de

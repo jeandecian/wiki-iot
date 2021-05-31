@@ -9,7 +9,7 @@ $(function () {
   var $emailLabel = $('label[for="wpEmail"]'),
     originalText =
       $emailLabel.text() +
-      ' (Allowed domains : <a target="_blank" href="/wiki-iot/resources/assets/domains/universities_domains.txt">Universities</a>, <a target="_blank" href="/wiki-iot/resources/assets/domains/custom_domains.txt">Others</a>)',
+      ' (<a target="_blank" href="/wiki-iot/index.php/Allowed_Domains">Allowed domains</a>)',
     requiredText = mw.message("createacct-emailrequired").text(),
     $createByMailCheckbox = $("#wpCreateaccountMail"),
     $beforePwds = $(".mw-row-password").first().prev(),

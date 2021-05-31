@@ -1,1 +1,6 @@
+canada.ca
+cnrs.fr
 crim.ca
+ieee.org
+gc.ca
+nist.gov
