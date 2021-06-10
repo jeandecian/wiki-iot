@@ -10,6 +10,7 @@
 - [PageForms](https://www.mediawiki.org/wiki/Extension:Page_Forms)
 - [Report](https://www.mediawiki.org/wiki/Extension:Report)
 - [RestrictEmailDomain](https://github.com/somadeaki/RestrictEmailDomain)
+- [SourceProtection](https://github.com/Sen-Sai/SourceProtection)
 
 ## Resources
 
