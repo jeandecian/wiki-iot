@@ -1,0 +1,37 @@
+table.product-template {
+  background-color: #f9f9f9;
+  border: 1px solid #aaaaaa;
+  clear: right;
+  color: black;
+  float: right;
+  font-size: 90%;
+  margin-bottom: 0.5em;
+  margin-left: 1em;
+  padding: 0.2em;
+  text-align: left;
+  width: 30em;
+}
+
+table.product-template .product-template-title {
+  background-color: #ccccff;
+  height: 69px;
+  text-align: center;
+}
+
+table.product-template .product-template-section {
+  background-color: lightgray;
+  text-align: center;
+}
+
+table.product-template th {
+  width: 12em;
+}
+
+table.product-template .product-template-image {
+  text-align: center;
+}
+
+table.product-template .product-template-image img {
+  height: 300px;
+  width: 300px;
+}
