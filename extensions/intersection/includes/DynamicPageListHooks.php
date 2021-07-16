@@ -34,10 +34,10 @@ class DynamicPageListHooks {
 		$countSet = false;
 		$count = 0;
 
-		$startList = '<ul>';
-		$endList = '</ul>';
-		$startItem = '<li>';
-		$endItem = '</li>';
+		$startList = '<div id="newestpages-main">';
+		$endList = '</div>';
+		$startItem = '<div><h3>';
+		$endItem = '</h3></div>';
 		$inlineMode = false;
 
 		$useGallery = false;
