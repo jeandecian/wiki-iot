@@ -12,6 +12,9 @@ function removeClassificationCategories() {
           "Category:",
           ""
         );
+        if (["Classification", "Product"].includes(item.firstChild.innerHTML)) {
+          item.remove();
+        }
       }
     }
   }
