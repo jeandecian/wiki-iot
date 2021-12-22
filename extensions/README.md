@@ -2,16 +2,16 @@
 
 ## Acknowledgment
 
-- [AdminLinks](https://www.mediawiki.org/wiki/Extension:Admin_Links)
-- [ApprovedRevs](https://www.mediawiki.org/wiki/Extension:Approved_Revs)
-- [DynamicPageList/intersection](https://www.mediawiki.org/wiki/Extension:DynamicPageList_(Wikimedia))
-- [GTag](https://github.com/SkizNet/mediawiki-GTag)
+- [AdminLinks v0.4.1](https://www.mediawiki.org/wiki/Extension:Admin_Links)
+- [ApprovedRevs v1.3.1](https://www.mediawiki.org/wiki/Extension:Approved_Revs)
+- [DynamicPageList/intersection v1.7.0](https://www.mediawiki.org/wiki/Extension:DynamicPageList_(Wikimedia))
+- [GTag v1.2.0](https://github.com/SkizNet/mediawiki-GTag)
 - [Lockdown](https://www.mediawiki.org/wiki/Extension:Lockdown)
-- [NewestPages](https://www.mediawiki.org/wiki/Extension:Newest_Pages)
-- [PageForms](https://www.mediawiki.org/wiki/Extension:Page_Forms)
+- [NewestPages v1.22](https://www.mediawiki.org/wiki/Extension:Newest_Pages)
+- [PageForms v5.1](https://www.mediawiki.org/wiki/Extension:Page_Forms)
 - [Report](https://www.mediawiki.org/wiki/Extension:Report)
-- [RestrictEmailDomain](https://github.com/somadeaki/RestrictEmailDomain)
-- [SourceProtection](https://github.com/Sen-Sai/SourceProtection)
+- [RestrictEmailDomain v1](https://github.com/somadeaki/RestrictEmailDomain)
+- [SourceProtection v1.1.2](https://github.com/Sen-Sai/SourceProtection)
 
 ## Resources
 
