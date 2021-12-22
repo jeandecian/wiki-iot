@@ -427,6 +427,7 @@ friends.edu
 frostburg.edu
 fuller.edu
 furman.edu
+futureworks.ac.uk
 gallaudet.edu
 gannon.edu
 geneva.edu
@@ -1142,6 +1143,7 @@ panam.edu
 swmed.edu
 utsouthwestern.edu
 utpb.edu
+arts.ac.uk
 udc.edu
 uiw.edu
 uiwtx.edu
@@ -1486,7 +1488,7 @@ curtin.edu.au
 deakin.edu.au
 ecu.edu.au
 flinders.edu.au
-gu.edu.au
+griffith.edu.au
 holmes.edu.au
 hotelschool.com.au
 icthm.edu.au
@@ -3360,6 +3362,10 @@ ismcm-cesti.fr
 ismra.fr
 itech.fr
 jussieu.fr
+etu.upmc.fr
+upmc.fr
+etu.sorbonne-universite.fr
+sorbonne-universite.fr
 mines.u-nancy.fr
 montaigne.u-bordeaux.fr
 montesquieu.u-bordeaux.fr
@@ -3721,6 +3727,7 @@ tuhh.de
 tu-ilmenau.de
 tum.de
 tum.edu
+mytum.de
 uni-augsburg.de
 uni-bamberg.de
 uni-bayreuth.de
@@ -3911,6 +3918,8 @@ uth.hn
 zamorano.edu
 chuhai.edu.hk
 cityu.edu.hk
+um.cityu.edu.hk
+my.cityu.edu.hk
 cuhk.hk
 hkapa.edu
 hkbu.edu.hk
@@ -3920,7 +3929,10 @@ ied.edu.hk
 ln.edu.hk
 ouhk.edu.hk
 polyu.edu.hk
+connect.polyu.hk
 ust.hk
+s.eduhk.hk
+eduhk.hk
 agr.unideb.hu
 andrassyuni.hu
 arts7.hu
@@ -4362,11 +4374,14 @@ wbuafs.nic.in
 wbut.net
 ycmou.com
 ysparmaruniversity.org
+akfarmitseda.ac.id
 akprind.ac.id
 amikom.ac.id
+stikesrsanwarmedika.ac.id
 atmajaya.ac.id
 bakrie.ac.id
 binus.ac.id
+stikes-ppni.ac.id
 bunghatta.ac.id
 dinus.ac.id
 gunadarma.ac.id
@@ -4380,6 +4395,7 @@ its.ac.id
 janabadra.ac.id
 jayabaya.ac.id
 machung.ac.id
+umaha.ac.id
 mahendradatta.org
 um.ac.id
 maranatha.edu
@@ -4438,6 +4454,7 @@ umj.ac.id
 umk.ac.id
 umm.ac.id
 ummgl.ac.id
+umsida.ac.id
 ums.ac.id
 umsu.ac.id
 umy.ac.id
@@ -4466,7 +4483,7 @@ unima.ac.id
 unimed.ac.id
 uninus.ac.id
 unipdu.ac.id
-unira-pmk.net
+unira.ac.id
 unisba.ac.id
 unisma.ac.id
 unismuh.ac.id
@@ -4475,7 +4492,9 @@ unissula.ac.id
 unistangerang.ac.id
 unitomo.ac.id
 universitas-trilogi.ac.id
+trunojoyo.ac.id
 univpancasila.ac.id
+unipasby.ac.id
 unja.ac.id
 unj.ac.id
 unjani.ac.id
@@ -4523,7 +4542,9 @@ uny.ac.id
 up45.ac.id
 uph.edu
 upi.edu
+upnvj.ac.id
 upnjatim.ac.id
+upnyk.ac.id
 upr.ac.id
 upstegal.ac.id
 usd.ac.id
@@ -4531,7 +4552,7 @@ usi.ac.id
 usm.ac.id
 usu.ac.id
 ut.ac.id
-utm.ac.id
+untidar.ac.id
 utp.ac.id
 widyagama.ac.id
 widyakarya.ac.id
@@ -5995,6 +6016,10 @@ univ-toliara.mg
 cunima.net
 mzuni.ac.mw
 ulivingstonia.com
+unima.ac.mw
+mubas.ac.mw
+must.ac.mw
+luanar.ac.mw
 unima.mw
 acms.edu.my
 aeu.edu.my
@@ -6206,6 +6231,7 @@ uabcs.mx
 uabjo.mx
 uacam.mx
 uach.mx
+itsncg.edu.mx
 uacj.mx
 uacm.edu.mx
 uadec.mx
@@ -6690,6 +6716,9 @@ muet.edu.pk
 mul.edu.pk
 nca.edu.pk
 neduet.edu.pk
+dsu.edu.pk
+smiu.edu.pk
+indus.edu.pk
 newports.edu.pk
 niab.org.pk
 nu.edu.pk
@@ -7293,7 +7322,7 @@ bspu.ru
 bstu.ru
 bsu.burnet.ru
 bsu.edu.ru
-chat.ru
+mosgu.ru
 chuvsu.ru
 cit.drbit.com.ru
 conservatoire.ru
@@ -8416,10 +8445,10 @@ kse.org.ua
 ksmu.kharkov.ua
 kstuca.kharkov.ua
 ksu.edu.ua
-kture.kharkov.ua
+nure.ua
 lgpu.lg.ua
 lp.edu.ua
-lsmu.com
+lsmu.edu.ua
 ma.odessa.ua
 meduniv.lviv.ua
 nau.edu.ua
@@ -9916,3 +9945,10 @@ prof.infnet.edu.br
 ssst.edu.ba
 hbc.edu.cn
 fom-net.de
+thm.de
+hwg-lu.de
+iiitm.ac.in
+leuphana.de
+oth-aw.de
+fatecie.edu.br
+hamk.fi
