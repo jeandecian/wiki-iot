@@ -1,5 +1,7 @@
+.vscode
 extensions/README
 images/
+script/domains_page.txt
 skins/README
 LocalSettings.php
 SettingsVariables.php
