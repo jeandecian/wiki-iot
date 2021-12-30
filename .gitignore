@@ -3,5 +3,6 @@ extensions/README
 images/
 script/domains_page.txt
 skins/README
+*.tar.gz
 LocalSettings.php
 SettingsVariables.php
