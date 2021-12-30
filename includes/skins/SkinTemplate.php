@@ -254,7 +254,21 @@ class SkinTemplate extends Skin
 							$footerIcon['height'] = 31;
 						}
 					}
-					$footericons[$footerIconsKey][] = $footerIcon;
+
+					// Only output icons which have an image.
+					// For historic reasons this mimics the `icononly` option
+					// for BaseTemplate::getFooterIcons.
+					// In some cases the icon may be an empty array.
+					// Filter these out. (See T269776)
+					if (is_string($footerIcon) || isset($footerIcon['src'])) {
+						$footericons[$footerIconsKey][] = $footerIcon;
+					}
+				}
+
+				// If no valid icons with images were added, unset the parent array
+				// Should also prevent empty arrays from when no copyright is set.
+				if (!count($footericons[$footerIconsKey])) {
+					unset($footericons[$footerIconsKey]);
 				}
 			}
 		}
@@ -795,7 +809,8 @@ class SkinTemplate extends Skin
 		?string $action,
 		bool $onPage
 	): array {
-		$class = 'mw-watchlink ' . ($onPage && ($action == 'watch' || $action == 'unwatch') ? 'selected' : '');
+		$class = 'mw-watchlink ' . ($onPage && ($action == 'watch' || $action == 'unwatch') ? 'selected' : ''
+		);
 
 		// Add class identifying the page is temporarily watched, if applicable.
 		if (
@@ -967,7 +982,8 @@ class SkinTemplate extends Skin
 					if (
 						$title->exists()
 						|| ($title->inNamespace(NS_MEDIAWIKI)
-							&& $title->getDefaultMessageText() !== false)
+							&& $title->getDefaultMessageText() !== false
+						)
 					) {
 						$msgKey = $isRemoteContent ? 'edit-local' : 'edit';
 					} else {
@@ -976,7 +992,8 @@ class SkinTemplate extends Skin
 					$content_navigation['views']['edit'] = [
 						'class' => ($isEditing && ($section !== 'new' || !$showNewSection)
 							? 'selected'
-							: '') . $isTalkClass,
+							: ''
+						) . $isTalkClass,
 						'text' => wfMessageFallback("$skname-view-$msgKey", $msgKey)
 							->setContext($this->getContext())->text(),
 						'href' => $title->getLocalURL($this->editUrlOptions()),

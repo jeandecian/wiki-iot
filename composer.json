@@ -16,7 +16,7 @@
 	"license": "GPL-2.0-or-later",
 	"support": {
 		"issues": "https://bugs.mediawiki.org/",
-		"irc": "irc://irc.freenode.net/mediawiki",
+		"irc": "irc://irc.libera.chat/mediawiki",
 		"wiki": "https://www.mediawiki.org/"
 	},
 	"prefer-stable": true,
@@ -69,7 +69,7 @@
 	},
 	"require-dev": {
 		"composer/spdx-licenses": "1.5.3",
-		"doctrine/dbal": "3.1.4",
+		"doctrine/dbal": "3.0.0",
 		"doctrine/sql-formatter": "1.1.0",
 		"giorgiosironi/eris": "^0.10.0",
 		"hamcrest/hamcrest-php": "^2.0",
