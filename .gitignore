@@ -3,6 +3,6 @@ extensions/README
 images/
 script/domains_page.txt
 skins/README
+service-account-credentials.json
 *.tar.gz
-LocalSettings.php
-SettingsVariables.php
+*.sql
