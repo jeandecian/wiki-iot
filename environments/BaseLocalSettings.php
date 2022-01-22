@@ -84,7 +84,7 @@ $wgUseInstantCommons = false;
 # Periodically send a pingback to https://www.mediawiki.org/ with basic data
 # about this MediaWiki instance. The Wikimedia Foundation shares this data
 # with MediaWiki developers to help guide future development efforts.
-$wgPingback = true;
+$wgPingback = false;
 
 ## If you use ImageMagick (or any other shell command) on a
 ## Linux server, this will need to be set to the name of an
@@ -149,10 +149,35 @@ wfLoadSkin( 'Vector' );
 // $wgReadOnly = 'Maintenance is underway. Website is on read-only mode';
 
 ####################################################################
+# Development
+####################################################################
+
+$wgShowExceptionDetails = false;
+$wgShowDBErrorBacktrace = false;
+$wgShowSQLErrors = false;
+
+####################################################################
 # Logo
 ####################################################################
 
 $wgFavicon = "$wgResourceBasePath/resources/assets/favicon.ico";
+
+####################################################################
+# URL
+####################################################################
+
+$wgExternalLinkTarget = "_blank";
+
+####################################################################
+# File
+####################################################################
+
+$wgFileExtensions = array(
+    "jpeg",
+    "jpg",
+    "pdf",
+    "png"
+);
 
 ####################################################################
 # Extensions & Group Permissions
@@ -170,10 +195,12 @@ $wgGroupPermissions['*']['viewlinktolatest'] = false;
 $wgGroupPermissions['sysop']['viewlinktolatest'] = true;
 $egApprovedRevsBlankIfUnapproved = true;
 
+wfLoadExtension("CategoryTree");
 wfLoadExtension('GTag');
 $wgGroupPermissions['sysop']['gtag-exempt'] = true;
 
 wfLoadExtension('InputBox');
+wfLoadExtension("intersection");
 wfLoadExtension('Lockdown');
 $wgActionLockdown['history'] = ['sysop'];
 $wgSpecialPageLockdown['Activeusers'] = ['sysop'];
@@ -181,6 +208,7 @@ $wgSpecialPageLockdown['Contributions'] = ['sysop'];
 $wgSpecialPageLockdown['Listusers'] = ['sysop'];
 $wgSpecialPageLockdown['Log'] = ['sysop'];
 $wgSpecialPageLockdown['Recentchanges'] = ['sysop'];
+$wgSpecialPageLockdown['Specialpages'] = ['sysop'];
 
 wfLoadExtension('NewestPages');
 wfLoadExtension('PageForms');
