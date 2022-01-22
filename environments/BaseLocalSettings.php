@@ -143,6 +143,18 @@ wfLoadSkin( 'Vector' );
 # Add more configuration options below.
 
 ####################################################################
+# Maintenance
+####################################################################
+
+// $wgReadOnly = 'Maintenance is underway. Website is on read-only mode';
+
+####################################################################
+# Logo
+####################################################################
+
+$wgFavicon = "$wgResourceBasePath/resources/assets/favicon.ico";
+
+####################################################################
 # Extensions & Group Permissions
 ####################################################################
 
@@ -190,12 +202,13 @@ wfLoadExtension('SourceProtection');
 # Email
 ####################################################################
 
+$wgEmailConfirmToEdit = true;
 $wgSMTP = [
     "host" => "",
     "IDHost" => "",
     "port" => 465,
     "username" => "apache@🌻.invalid",
-    "password" => "password",
+    "password" => "",
     "auth" => true
 ];
 
