@@ -1,4 +1,5 @@
 marywood.edu
+upes.ac.in
 cstj.qc.ca
 lindenwood.edu
 davietjal.org
@@ -337,6 +338,7 @@ conncoll.edu
 ct.edu
 cooper.edu
 coppin.edu
+allencollege.edu
 cornell-iowa.edu
 cornell.edu
 corning-cc.edu
@@ -398,6 +400,7 @@ emmanuel.edu
 emory.edu
 emporia.edu
 ecc.edu
+lecom.edu
 etbu.edu
 evergreen.edu
 fdu.edu
@@ -619,6 +622,7 @@ messiah.edu
 mcckc.edu
 mccneb.edu
 msudenver.edu
+denvercollegeofnursing.edu
 metrostate.edu
 miamioh.edu
 msu.edu
@@ -1118,6 +1122,7 @@ scranton.edu
 usouixfalls.edu
 southalabama.edu
 sc.edu
+andersonuniversity.edu
 usca.edu
 usd.edu
 usc.edu
@@ -2944,6 +2949,7 @@ vse.cz
 vslib.cz
 vsp.cz
 vutbr.cz
+vut.cz
 zcu.cz
 a-aarhus.dk
 ah.dk
@@ -4123,6 +4129,7 @@ iith.ac.in
 iitk.ac.in
 iitkgp.ernet.in
 iitm.ac.in
+itu.edu.pk
 mitindia.edu
 iitr.ac.in
 iitp.ac.in
@@ -6948,6 +6955,7 @@ plm.edu.ph
 pma.ph
 pnumanila.com.ph
 psu.edu.ph
+psu.palawan.edu.ph
 psu-online.edu.ph
 pup.edu.ph
 pwu.edu
@@ -9719,6 +9727,7 @@ blinn.edu
 brookhavencollege.edu
 cedarvalleycollege.edu
 ctcd.edu
+schreiner.edu
 cisco.edu
 clarendoncollege.edu
 coastalbend.edu
@@ -9952,3 +9961,5 @@ leuphana.de
 oth-aw.de
 fatecie.edu.br
 hamk.fi
+ktun.edu.tr
+uet.vnu.edu.vn
