@@ -8,9 +8,13 @@
  * @ingroup PF
  */
 
+use MediaWiki\MediaWikiServices;
+
 class PFHooks {
 
-	// Used for caching by addToCargoTablesLinks().
+	/**
+	 * Used for caching by addToCargoTablesLinks().
+	 */
 	private static $mMultiPageEditPage = null;
 
 	public static function registerExtension() {
@@ -19,7 +23,7 @@ class PFHooks {
 			return 1;
 		}
 
-		define( 'PF_VERSION', '5.1' );
+		define( 'PF_VERSION', '5.3.4' );
 
 		$GLOBALS['wgPageFormsIP'] = dirname( __DIR__ ) . '/../';
 
@@ -43,8 +47,7 @@ class PFHooks {
 	public static function initialize() {
 		global $wgHooks;
 
-		$GLOBALS['wgPageFormsPartialPath'] = '/extensions/PageForms';
-		$GLOBALS['wgPageFormsScriptPath'] = $GLOBALS['wgScriptPath'] . $GLOBALS['wgPageFormsPartialPath'];
+		$GLOBALS['wgPageFormsScriptPath'] = $GLOBALS['wgExtensionAssetsPath'] . '/PageForms';
 
 		if ( class_exists( 'MediaWiki\HookContainer\HookContainer' ) ) {
 			// MW 1.35+
@@ -80,26 +83,20 @@ class PFHooks {
 		// the value here instead.
 		$pageFormsDir = __DIR__ . '/..';
 
+		$mapsModuleAttrs = [
+			'localBasePath' => $pageFormsDir,
+			'remoteExtPath' => 'PageForms',
+			'dependencies' => [ 'oojs-ui.styles.icons-location' ]
+		];
+
 		if ( ExtensionRegistry::getInstance()->isLoaded( 'OpenLayers' ) ) {
-			$resourceLoader->register( [
-				'ext.pageforms.maps' => [
-					'localBasePath' => $pageFormsDir,
-					'remoteExtPath' => 'PageForms',
-					'scripts' => '/libs/PF_maps.offline.js',
-					'dependencies' => [
-						'ext.openlayers.main',
-					],
-				],
-			] );
+			$mapsModuleAttrs['scripts'] = '/libs/PF_maps.offline.js';
+			$mapsModuleAttrs['dependencies'][] = 'ext.openlayers.main';
 		} else {
-			$resourceLoader->register( [
-				'ext.pageforms.maps' => [
-					'localBasePath' => $pageFormsDir,
-					'remoteExtPath' => 'PageForms',
-					'scripts' => '/libs/PF_maps.js',
-				],
-			] );
+			$mapsModuleAttrs['scripts'] = '/libs/PF_maps.js';
 		}
+
+		$resourceLoader->register( [ 'ext.pageforms.maps' => $mapsModuleAttrs ] );
 
 		return true;
 	}
@@ -132,15 +129,17 @@ class PFHooks {
 	}
 
 	static function registerFunctions( Parser $parser ) {
-		$parser->setFunctionHook( 'default_form', [ 'PFParserFunctions', 'renderDefaultForm' ] );
-		$parser->setFunctionHook( 'forminput', [ 'PFParserFunctions', 'renderFormInput' ] );
-		$parser->setFunctionHook( 'formlink', [ 'PFParserFunctions', 'renderFormLink' ] );
-		$parser->setFunctionHook( 'formredlink', [ 'PFParserFunctions', 'renderFormRedLink' ] );
-		$parser->setFunctionHook( 'queryformlink', [ 'PFParserFunctions', 'renderQueryFormLink' ] );
-		$parser->setFunctionHook( 'arraymap', [ 'PFParserFunctions', 'renderArrayMap' ], Parser::SFH_OBJECT_ARGS );
-		$parser->setFunctionHook( 'arraymaptemplate', [ 'PFParserFunctions', 'renderArrayMapTemplate' ], Parser::SFH_OBJECT_ARGS );
+		$parser->setFunctionHook( 'default_form', [ 'PFDefaultForm', 'run' ] );
+		$parser->setFunctionHook( 'forminput', [ 'PFFormInputParserFunction', 'run' ] );
+		$parser->setFunctionHook( 'formlink', [ 'PFFormLink', 'run' ] );
+		$parser->setFunctionHook( 'formredlink', [ 'PFFormRedLink', 'run' ] );
+		$parser->setFunctionHook( 'queryformlink', [ 'PFQueryFormLink', 'run' ] );
+		$parser->setFunctionHook( 'arraymap', [ 'PFArrayMap', 'run' ], Parser::SFH_OBJECT_ARGS );
+		$parser->setFunctionHook( 'arraymaptemplate', [ 'PFArrayMapTemplate', 'run' ], Parser::SFH_OBJECT_ARGS );
 
-		$parser->setFunctionHook( 'autoedit', [ 'PFParserFunctions', 'renderAutoEdit' ] );
+		$parser->setFunctionHook( 'autoedit', [ 'PFAutoEdit', 'run' ] );
+		$parser->setFunctionHook( 'template_params', [ 'PFTemplateParams', 'run' ] );
+		$parser->setFunctionHook( 'template_display', [ 'PFTemplateDisplay', 'run' ], Parser::SFH_OBJECT_ARGS );
 
 		return true;
 	}
@@ -215,6 +214,7 @@ class PFHooks {
 		}
 		$smw_row->addItem( ALItem::newFromSpecialPage( 'Templates' ), 'Properties' );
 		$smw_row->addItem( ALItem::newFromSpecialPage( 'Forms' ), 'SemanticStatistics' );
+		$smw_row->addItem( ALItem::newFromSpecialPage( 'MultiPageEdit' ) );
 		$smw_admin_row->addItem( ALItem::newFromSpecialPage( 'CreateClass' ), 'SMWAdmin' );
 		if ( class_exists( 'PFCreateProperty' ) ) {
 			$smw_admin_row->addItem( ALItem::newFromSpecialPage( 'CreateProperty' ), 'SMWAdmin' );
@@ -253,18 +253,17 @@ class PFHooks {
 	 *
 	 * @param array &$actionLinks Action links
 	 * @param string $tableName Cargo table name
-	 * @param bool $isReplacementTable Whether this table iss a replacement table
+	 * @param bool $isReplacementTable Whether this table is a replacement table
 	 * @param bool $hasReplacementTable Whether this table has a replacement table
-	 * @param string[] $templatesThatDeclareTables An array
-	 * @param string[] $templatesThatAttachToTables An array
+	 * @param int[][] $templatesThatDeclareTables
+	 * @param string[] $templatesThatAttachToTables
+	 * @param User|null $user The current user
 	 *
 	 * @return bool
 	 *
 	 * @since 4.4
 	 */
-	public static function addToCargoTablesLinks( &$actionLinks, $tableName, $isReplacementTable, $hasReplacementTable, $templatesThatDeclareTables, $templatesThatAttachToTables ) {
-		global $wgUser;
-
+	public static function addToCargoTablesLinks( &$actionLinks, $tableName, $isReplacementTable, $hasReplacementTable, $templatesThatDeclareTables, $templatesThatAttachToTables, $user = null ) {
 		// If it has a "replacement table", it's read-only and can't
 		// be edited (though the replacement table can).
 		if ( $hasReplacementTable ) {
@@ -272,7 +271,12 @@ class PFHooks {
 		}
 
 		// Check permissions.
-		if ( !$wgUser->isAllowed( 'multipageedit' ) ) {
+		if ( $user == null ) {
+			// For Cargo versions < 3.1.
+			$user = RequestContext::getMain()->getUser();
+		}
+
+		if ( !$user->isAllowed( 'multipageedit' ) ) {
 			return true;
 		}
 		// Only put in an "Edit" link if there's exactly one template
@@ -299,10 +303,11 @@ class PFHooks {
 			return true;
 		}
 
+		$linkRenderer = MediaWikiServices::getInstance()->getLinkRenderer();
 		$sp = PFUtils::getSpecialPage( 'MultiPageEdit' );
 		$editMsg = wfMessage( 'edit' )->text();
 		$linkParams = [ 'template' => $templateName, 'form' => $formName ];
-		$text = Linker::linkKnown( $sp->getPageTitle(), $editMsg, [], $linkParams );
+		$text = $linkRenderer->makeKnownLink( $sp->getPageTitle(), $editMsg, [], $linkParams );
 
 		$indexOfDrilldown = array_search( 'drilldown', array_keys( $actionLinks ) );
 		$pos = $indexOfDrilldown === false ? count( $actionLinks ) : $indexOfDrilldown + 1;
@@ -320,22 +325,23 @@ class PFHooks {
 	 * @param string $tableName Cargo table name
 	 * @param bool $isReplacementTable Whether this table iss a replacement table
 	 * @param bool $hasReplacementTable Whether this table has a replacement table
-	 * @param string[] $templatesThatDeclareTables An array
-	 * @param string[] $templatesThatAttachToTables An array
+	 * @param int[][] $templatesThatDeclareTables
+	 * @param string[] $templatesThatAttachToTables
 	 * @param string[] $actionList
+	 * @param User|null $user The current user
 	 *
 	 * @return bool
 	 *
 	 * @since 4.8.1
 	 */
-	public static function addToCargoTablesRow( $cargoTablesPage, &$actionLinks, $tableName, $isReplacementTable, $hasReplacementTable, $templatesThatDeclareTables, $templatesThatAttachToTables, $actionList ) {
+	public static function addToCargoTablesRow( $cargoTablesPage, &$actionLinks, $tableName, $isReplacementTable, $hasReplacementTable, $templatesThatDeclareTables, $templatesThatAttachToTables, $actionList, $user = null ) {
 		$cargoTablesPage->getOutput()->addModuleStyles( [ 'oojs-ui.styles.icons-editing-core' ] );
 
 		// For the sake of simplicity, this function basically just
 		// wraps around the previous hook function, for Cargo <= 2.4.
 		// That's why there's this awkward behavior of parsing links
 		// to get their URL. Hopefully this won't cause problems.
-		self::addToCargoTablesLinks( $actionLinks, $tableName, $isReplacementTable, $hasReplacementTable, $templatesThatDeclareTables, $templatesThatAttachToTables );
+		self::addToCargoTablesLinks( $actionLinks, $tableName, $isReplacementTable, $hasReplacementTable, $templatesThatDeclareTables, $templatesThatAttachToTables, $user );
 
 		if ( array_key_exists( 'edit', $actionLinks ) ) {
 			preg_match( '/href="(.*?)"/', $actionLinks['edit'], $matches );
@@ -350,7 +356,7 @@ class PFHooks {
 	 * Disable TinyMCE if this is a form definition page, or a form-editable page.
 	 *
 	 * @param Title $title The page Title object
-	 * @return Whether or not to disable TinyMCE
+	 * @return bool Whether or not to disable TinyMCE
 	 */
 	public static function disableTinyMCE( $title ) {
 		if ( $title->getNamespace() == PF_NS_FORM ) {
@@ -382,12 +388,7 @@ class PFHooks {
 		// Needed in case there are any OOUI-based input types in the form.
 		$wgOut->enableOOUI();
 
-		if ( method_exists( $wgOut, 'parseAsInterface' ) ) {
-			// MW 1.32+
-			$previewNote = $wgOut->parseAsInterface( wfMessage( 'pf-preview-note' )->text() );
-		} else {
-			$previewNote = $wgOut->parse( wfMessage( 'pf-preview-note' )->text() );
-		}
+		$previewNote = $wgOut->parseAsInterface( wfMessage( 'pf-preview-note' )->text() );
 		// The "pfForm" ID is there so the form JS will be activated.
 		$editpage->previewTextAfterContent .= Html::element( 'h2', null, wfMessage( 'pf-preview-header' )->text() ) . "\n" .
 			'<div id="pfForm" class="previewnote" style="font-weight: bold">' . $previewNote . "</div>\n<hr />\n";
@@ -473,11 +474,8 @@ class PFHooks {
 	 * @return bool
 	 */
 	public static function setPostEditCookie( WikiPage $wikiPage, MediaWiki\User\UserIdentity $user, string $summary, int $flags,
-		MediaWiki\Revision\RevisionRecord $revisionRecord, MediaWiki\Storage\EditResult $editResult ) {
-		if ( $revisionRecord == null ) {
-			return true;
-		}
-
+		MediaWiki\Revision\RevisionRecord $revisionRecord, MediaWiki\Storage\EditResult $editResult
+	) {
 		// Have this take effect only if the save came from a form -
 		// we need to use a global variable to determine that.
 		global $wgPageFormsFormPrinter;

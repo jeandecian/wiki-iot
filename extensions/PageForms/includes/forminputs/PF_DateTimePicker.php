@@ -16,6 +16,10 @@ use MediaWiki\Widget\DateTimeInputWidget;
 
 class PFDateTimePicker extends PFFormInput {
 
+	public static function getName(): string {
+		return 'datetimepicker';
+	}
+
 	/**
 	 * @param string $input_number The number of the input in the form.
 	 * @param string $cur_value The current value of the input field.
@@ -33,18 +37,6 @@ class PFDateTimePicker extends PFFormInput {
 	}
 
 	/**
-	 * Returns the name of the input type this class handles: menuselect.
-	 *
-	 * This is the name to be used in the field definition for the "input
-	 * type" parameter.
-	 *
-	 * @return string The name of the input type this class handles.
-	 */
-	public static function getName() {
-		return 'datetimepicker';
-	}
-
-	/**
 	 * Returns the HTML code to be included in the output page for this input.
 	 *
 	 * Ideally this HTML code should provide a basic functionality even if the
@@ -52,7 +44,7 @@ class PFDateTimePicker extends PFFormInput {
 	 * should be able to input values.
 	 * @return string
 	 */
-	public function getHtmlText() {
+	public function getHtmlText(): string {
 		$widget = new DateTimeInputWidget( [
 			'type' => 'datetime',
 			'name' => $this->mInputName,

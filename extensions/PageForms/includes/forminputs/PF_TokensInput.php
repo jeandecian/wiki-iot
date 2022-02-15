@@ -10,7 +10,8 @@ use MediaWiki\MediaWikiServices;
  * @ingroup PFFormInput
  */
 class PFTokensInput extends PFFormInput {
-	public static function getName() {
+
+	public static function getName(): string {
 		return 'tokens';
 	}
 
@@ -164,15 +165,14 @@ class PFTokensInput extends PFFormInput {
 		if ( array_key_exists( 'max values', $other_args ) ) {
 			$inputAttrs['maxvalues'] = $other_args['max values'];
 		}
-		if ( array_key_exists( 'namespace', $other_args ) ) {
-			$inputAttrs['data-namespace'] = $other_args['namespace'];
-		}
+
 		// This code adds predefined tokens in the form of <options>
 
 		$cur_values = PFValuesUtils::getValuesArray( $cur_value, $delimiter );
 		$optionsText = '';
 
-		if ( ( $possible_values = $other_args['possible_values'] ) == null ) {
+		$possible_values = $other_args['possible_values'];
+		if ( $possible_values == null ) {
 			// If it's a Boolean property, display 'Yes' and 'No'
 			// as the values.
 			if ( array_key_exists( 'property_type', $other_args ) && $other_args['property_type'] == '_boo' ) {
@@ -273,7 +273,7 @@ class PFTokensInput extends PFFormInput {
 	 * Returns the HTML code to be included in the output page for this input.
 	 * @return string
 	 */
-	public function getHtmlText() {
+	public function getHtmlText(): string {
 		return self::getHTML(
 			$this->mCurrentValue,
 			$this->mInputName,

@@ -1,6 +1,8 @@
 <?php
 
 use MediaWiki\MediaWikiServices;
+use MediaWiki\Revision\RenderedRevision;
+use OOUI\ButtonInputWidget;
 
 /**
  * Utilities for the display and retrieval of forms.
@@ -47,21 +49,27 @@ class PFFormUtils {
 		if ( $label == null ) {
 			$label = wfMessage( 'summary' )->text();
 		}
-		$text = Html::rawElement( 'span', [ 'id' => 'wpSummaryLabel' ],
-			Html::element( 'label', [ 'for' => 'wpSummary' ], $label ) );
 
 		$wgPageFormsTabIndex++;
-		$attr['tabindex'] = $wgPageFormsTabIndex;
-		$attr['type'] = 'text';
-		$attr['value'] = $value;
-		$attr['name'] = 'wpSummary';
-		$attr['id'] = 'wpSummary';
-		$attr['maxlength'] = 255;
-		$attr['size'] = 60;
+		$attr += [
+			'tabIndex' => $wgPageFormsTabIndex,
+			'value' => $value,
+			'name' => 'wpSummary',
+			'id' => 'wpSummary',
+			'maxlength' => 255,
+			'title' => wfMessage( 'tooltip-summary' )->text(),
+			'accessKey' => wfMessage( 'accesskey-summary' )->text()
+		];
 		if ( $is_disabled ) {
 			$attr['disabled'] = true;
 		}
-		$text .= ' ' . Html::element( 'input', $attr );
+		$text = new OOUI\FieldLayout(
+			new OOUI\TextInputWidget( $attr ),
+			[
+				'align' => 'top',
+				'label' => $label
+			]
+		);
 
 		return $text;
 	}
@@ -79,20 +87,28 @@ class PFFormUtils {
 			$label = wfMessage( 'minoredit' )->parse();
 		}
 
-		$tooltip = wfMessage( 'tooltip-minoredit' )->text();
 		$attrs += [
 			'id' => 'wpMinoredit',
-			'accesskey' => wfMessage( 'accesskey-minoredit' )->text(),
-			'tabindex' => $wgPageFormsTabIndex,
+			'accessKey' => wfMessage( 'accesskey-minoredit' )->text(),
+			'tabIndex' => $wgPageFormsTabIndex,
 		];
+		if ( $is_checked ) {
+			$attrs['selected'] = true;
+		}
 		if ( $is_disabled ) {
 			$attrs['disabled'] = true;
 		}
-		$text = "\t" . Html::check( 'wpMinoredit', $is_checked, $attrs ) . "\n";
-		$text .= "\t" . Html::rawElement( 'label', [
-			'for' => 'wpMinoredit',
-			'title' => $tooltip
-		], $label ) . "\n";
+
+		// We can't use OOUI\FieldLayout here, because it will make the display too wide.
+		$labelWidget = new OOUI\LabelWidget( [
+			'label' => new OOUI\HtmlSnippet( $label )
+		] );
+		$text = Html::rawElement(
+			'label',
+			[ 'title' => wfMessage( 'tooltip-minoredit' )->parse() ],
+			new OOUI\CheckboxInputWidget( $attrs ) . $labelWidget
+		);
+		$text = Html::rawElement( 'div', [ 'style' => 'display: inline-block; padding: 12px 16px 12px 0;' ], $text );
 
 		return $text;
 	}
@@ -105,15 +121,34 @@ class PFFormUtils {
 		// this code borrowed from /includes/EditPage.php
 		if ( !$form_submitted ) {
 			$user = RequestContext::getMain()->getUser();
-			if ( $user->getOption( 'watchdefault' ) ) {
-				# Watch all edits
-				$is_checked = true;
-			} elseif ( $user->getOption( 'watchcreations' ) && !$wgTitle->exists() ) {
-				# Watch creations
-				$is_checked = true;
-			} elseif ( $user->isWatched( $wgTitle ) ) {
-				# Already watched
-				$is_checked = true;
+			if ( method_exists( \MediaWiki\Watchlist\WatchlistManager::class, 'isWatched' ) ) {
+				// MediaWiki 1.37+
+				// UserOptionsLookup::getOption was introduced in MW 1.35
+				$services = MediaWikiServices::getInstance();
+				$userOptionsLookup = $services->getUserOptionsLookup();
+				$watchlistManager = $services->getWatchlistManager();
+				if ( $userOptionsLookup->getOption( $user, 'watchdefault' ) ) {
+					# Watch all edits
+					$is_checked = true;
+				} elseif ( $userOptionsLookup->getOption( $user, 'watchcreations' ) &&
+					!$wgTitle->exists() ) {
+					# Watch creations
+					$is_checked = true;
+				} elseif ( $watchlistManager->isWatched( $user, $wgTitle ) ) {
+					# Already watched
+					$is_checked = true;
+				}
+			} else {
+				if ( $user->getOption( 'watchdefault' ) ) {
+					# Watch all edits
+					$is_checked = true;
+				} elseif ( $user->getOption( 'watchcreations' ) && !$wgTitle->exists() ) {
+					# Watch creations
+					$is_checked = true;
+				} elseif ( $user->isWatched( $wgTitle ) ) {
+					# Already watched
+					$is_checked = true;
+				}
 			}
 		}
 		if ( $label == null ) {
@@ -121,18 +156,26 @@ class PFFormUtils {
 		}
 		$attrs += [
 			'id' => 'wpWatchthis',
-			'accesskey' => wfMessage( 'accesskey-watch' )->text(),
-			'tabindex' => $wgPageFormsTabIndex,
+			'accessKey' => wfMessage( 'accesskey-watch' )->text(),
+			'tabIndex' => $wgPageFormsTabIndex,
 		];
+		if ( $is_checked ) {
+			$attrs['selected'] = true;
+		}
 		if ( $is_disabled ) {
 			$attrs['disabled'] = true;
 		}
-		$text = "\t" . Html::check( 'wpWatchthis', $is_checked, $attrs ) . "\n";
-		$tooltip = wfMessage( 'tooltip-watch' )->text();
-		$text .= "\t" . Html::rawElement( 'label', [
-			'for' => 'wpWatchthis',
-			'title' => $tooltip
-		], $label ) . "\n";
+
+		// We can't use OOUI\FieldLayout here, because it will make the display too wide.
+		$labelWidget = new OOUI\LabelWidget( [
+			'label' => new OOUI\HtmlSnippet( $label )
+		] );
+		$text = Html::rawElement(
+			'label',
+			[ 'title' => wfMessage( 'tooltip-watch' )->parse() ],
+			new OOUI\CheckboxInputWidget( $attrs ) . $labelWidget
+		);
+		$text = Html::rawElement( 'div', [ 'style' => 'display: inline-block; padding: 12px 16px 12px 0;' ], $text );
 
 		return $text;
 	}
@@ -143,10 +186,24 @@ class PFFormUtils {
 	 * @param string $value
 	 * @param string $type
 	 * @param array $attrs
-	 * @return string
+	 * @return ButtonInputWidget
 	 */
 	static function buttonHTML( $name, $value, $type, $attrs ) {
-		return "\t\t" . Html::input( $name, $value, $type, $attrs ) . "\n";
+		$attrs += [
+			'type' => $type,
+			'name' => $name,
+			'label' => $value
+		];
+		$button = new ButtonInputWidget( $attrs );
+		// Special handling for 'class'.
+		if ( isset( $attrs['class'] ) ) {
+			// Make sure it's an array.
+			if ( is_string( $attrs['class'] ) ) {
+				$attrs['class'] = [ $attrs['class'] ];
+			}
+			$button->addClasses( $attrs['class'] );
+		}
+		return $button;
 	}
 
 	static function saveButtonHTML( $is_disabled, $label = null, $attr = [] ) {
@@ -158,9 +215,10 @@ class PFFormUtils {
 		}
 		$temp = $attr + [
 			'id'        => 'wpSave',
-			'tabindex'  => $wgPageFormsTabIndex,
-			'accesskey' => wfMessage( 'accesskey-save' )->text(),
+			'tabIndex'  => $wgPageFormsTabIndex,
+			'accessKey' => wfMessage( 'accesskey-save' )->text(),
 			'title'     => wfMessage( 'tooltip-save' )->text(),
+			'flags'     => [ 'primary', 'progressive' ]
 		];
 		if ( $is_disabled ) {
 			$temp['disabled'] = true;
@@ -179,9 +237,9 @@ class PFFormUtils {
 
 		$temp = $attr + [
 			'id'        => 'wpSaveAndContinue',
-			'tabindex'  => $wgPageFormsTabIndex,
+			'tabIndex'  => $wgPageFormsTabIndex,
 			'disabled'  => true,
-			'accesskey' => wfMessage( 'pf_formedit_accesskey_saveandcontinueediting' )->text(),
+			'accessKey' => wfMessage( 'pf_formedit_accesskey_saveandcontinueediting' )->text(),
 			'title'     => wfMessage( 'pf_formedit_tooltip_saveandcontinueediting' )->text(),
 		];
 
@@ -203,8 +261,8 @@ class PFFormUtils {
 		}
 		$temp = $attr + [
 			'id'        => 'wpPreview',
-			'tabindex'  => $wgPageFormsTabIndex,
-			'accesskey' => wfMessage( 'accesskey-preview' )->text(),
+			'tabIndex'  => $wgPageFormsTabIndex,
+			'accessKey' => wfMessage( 'accesskey-preview' )->text(),
 			'title'     => wfMessage( 'tooltip-preview' )->text(),
 		];
 		if ( $is_disabled ) {
@@ -222,8 +280,8 @@ class PFFormUtils {
 		}
 		$temp = $attr + [
 			'id'        => 'wpDiff',
-			'tabindex'  => $wgPageFormsTabIndex,
-			'accesskey' => wfMessage( 'accesskey-diff' )->text(),
+			'tabIndex'  => $wgPageFormsTabIndex,
+			'accessKey' => wfMessage( 'accesskey-diff' )->text(),
 			'title'     => wfMessage( 'tooltip-diff' )->text(),
 		];
 		if ( $is_disabled ) {
@@ -238,23 +296,15 @@ class PFFormUtils {
 		if ( $label == null ) {
 			$label = wfMessage( 'cancel' )->parse();
 		}
-		if ( $wgTitle == null ) {
-			$cancel = '';
-		} elseif ( $wgTitle->isSpecial( 'FormEdit' ) ) {
-			// If we're on the special 'FormEdit' page, just send the user
-			// back to the previous page they were on.
-			$stepsBack = 1;
-			// For IE, we need to go back twice, past the redirect.
-			if ( array_key_exists( 'HTTP_USER_AGENT', $_SERVER ) &&
-				stristr( $_SERVER['HTTP_USER_AGENT'], "msie" ) ) {
-				$stepsBack = 2;
-			}
-			$cancel = "<a href=\"javascript:history.go(-$stepsBack);\">$label</a>";
+		if ( $wgTitle == null || $wgTitle->isSpecial( 'FormEdit' ) ) {
+			$attr['classes'] = [ 'pfSendBack' ];
 		} else {
-			$linkRenderer = MediaWikiServices::getInstance()->getLinkRenderer();
-			$cancel = $linkRenderer->makeKnownLink( $wgTitle, $label );
+			$attr['href'] = $wgTitle->getFullURL();
 		}
-		return "\t\t" . Html::rawElement( 'span', [ 'class' => 'editHelp' ], $cancel ) . "\n";
+		$attr['framed'] = false;
+		$attr['label'] = $label;
+		$attr['flags'] = [ 'destructive' ];
+		return "\t\t" . new OOUI\ButtonWidget( $attr ) . "\n";
 	}
 
 	static function runQueryButtonHTML( $is_disabled = false, $label = null, $attr = [] ) {
@@ -265,29 +315,42 @@ class PFFormUtils {
 		if ( $label == null ) {
 			$label = wfMessage( 'runquery' )->text();
 		}
-		return self::buttonHTML( 'wpRunQuery', $label, 'submit',
+		$buttonHTML = self::buttonHTML( 'wpRunQuery', $label, 'submit',
 			$attr + [
-			'id'        => 'wpRunQuery',
-			'tabindex'  => $wgPageFormsTabIndex,
-			'title'     => $label,
+			'id' => 'wpRunQuery',
+			'tabIndex' => $wgPageFormsTabIndex,
+			'title' => $label,
+			'flags' => [ 'primary', 'progressive' ],
+			'icon' => 'search'
 		] );
+		return new OOUI\FieldLayout( $buttonHTML );
 	}
 
-	// Much of this function is based on MediaWiki's EditPage::showEditForm()
+	/**
+	 * Much of this function is based on MediaWiki's EditPage::showEditForm().
+	 * @param bool $form_submitted
+	 * @param bool $is_disabled
+	 * @return string
+	 */
 	static function formBottom( $form_submitted, $is_disabled ) {
-		$summary_text = self::summaryInputHTML( $is_disabled );
 		$text = <<<END
-	<br /><br />
+	<br />
 	<div class='editOptions'>
-$summary_text	<br />
 
 END;
+		$text .= self::summaryInputHTML( $is_disabled );
 		$user = RequestContext::getMain()->getUser();
 		if ( $user->isAllowed( 'minoredit' ) ) {
 			$text .= self::minorEditInputHTML( $form_submitted, $is_disabled, false );
 		}
 
-		if ( $user->isLoggedIn() ) {
+		if ( method_exists( $user, 'isRegistered' ) ) {
+			// MW 1.34+
+			$userIsRegistered = $user->isRegistered();
+		} else {
+			$userIsRegistered = $user->isLoggedIn();
+		}
+		if ( $userIsRegistered ) {
 			$text .= self::watchInputHTML( $form_submitted, $is_disabled );
 		}
 
@@ -308,7 +371,12 @@ END;
 		return $text;
 	}
 
-	// Loosely based on MediaWiki's EditPage::getPreloadedContent().
+	/**
+	 * Loosely based on MediaWiki's EditPage::getPreloadedContent().
+	 *
+	 * @param string $preload
+	 * @return string
+	 */
 	static function getPreloadedText( $preload ) {
 		if ( $preload === '' ) {
 			return '';
@@ -332,13 +400,7 @@ END;
 			}
 		}
 
-		$rev = Revision::newFromTitle( $preloadTitle );
-		if ( !is_object( $rev ) ) {
-			return '';
-		}
-
-		$content = $rev->getContent();
-		$text = ContentHandler::getContentText( $content );
+		$text = PFUtils::getPageText( $preloadTitle );
 		// Remove <noinclude> sections and <includeonly> tags from text
 		$text = StringUtils::delimiterReplace( '<noinclude>', '</noinclude>', '', $text );
 		$text = strtr( $text, [ '<includeonly>' => '', '</includeonly>' => '' ] );
@@ -437,8 +499,7 @@ END;
 			$regexp,
 
 			// This is essentially a copy of Parser::insertStripItem().
-			// The 'use' keyword will bump the minimum PHP version to 5.3
-			function ( array $matches ) use ( &$items, $rnd ) {
+			static function ( array $matches ) use ( &$items, $rnd ) {
 				$markerIndex = count( $items );
 				$items[] = $matches[0];
 				return "$rnd-item-$markerIndex-$rnd";
@@ -460,7 +521,7 @@ END;
 		}
 		$form_def = preg_replace_callback(
 			"/{$rnd}-item-(\d+)-{$rnd}/",
-			function ( array $matches ) use ( $items ) {
+			static function ( array $matches ) use ( $items ) {
 				$markerIndex = (int)$matches[1];
 				return $items[$markerIndex];
 			},
@@ -595,9 +656,9 @@ END;
 	 * @param RenderedRevision $renderedRevision
 	 * @return bool
 	 */
-	public static function purgeCache2( MediaWiki\Revision\RenderedRevision $renderedRevision ) {
+	public static function purgeCache2( RenderedRevision $renderedRevision ) {
 		$articleID = $renderedRevision->getRevision()->getPageId();
-		if ( class_exists( 'MediaWiki\Page\WikiPageFactory' ) ) {
+		if ( method_exists( MediaWikiServices::class, 'getWikiPageFactory' ) ) {
 			// MW 1.36+
 			$wikiPage = MediaWikiServices::getInstance()->getWikiPageFactory()->newFromID( $articleID );
 		} else {
@@ -612,12 +673,12 @@ END;
 	}
 
 	/**
-	 *  Get the cache object used by the form cache
+	 * Get the cache object used by the form cache
 	 * @return BagOStuff
 	 */
 	public static function getFormCache() {
 		global $wgPageFormsFormCacheType, $wgParserCacheType;
-		$ret = wfGetCache( ( $wgPageFormsFormCacheType !== null ) ? $wgPageFormsFormCacheType : $wgParserCacheType );
+		$ret = ObjectCache::getInstance( ( $wgPageFormsFormCacheType !== null ) ? $wgPageFormsFormCacheType : $wgParserCacheType );
 		return $ret;
 	}
 
