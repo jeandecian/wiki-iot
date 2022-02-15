@@ -1,100 +1,166 @@
 /*
- * Citizen - Popups Styles
- * https://starcitizen.tools
+ * Citizen
+ *
+ * SkinStyles for Extension:Popups
+ * Module: ext.popups.main
+ * Version: REL1_35 dccd607
+ *
+ * Date: 2021-09-02
 */
 
-@import '../../../resources/variables.less';
 @import '../../../resources/mixins.less';
 
 .mwe-popups {
-	background-color: var( --background-color-dp-08 );
-	.boxshadow(4);
+	overflow: hidden;
+	border: 1px solid var( --border-color-base ); // original box shadow also serve as a border
+	background-color: var( --color-surface-1 );
+	border-radius: var( --border-radius--medium );
+	.boxshadow(3);
+
+	&:hover {
+		background-color: var( --color-surface-2 );
+
+		.mwe-popups-extract {
+			&[ dir='ltr' ]:after {
+				/* @noflip */
+				background-image: linear-gradient( to right, transparent, var( --color-surface-2 ) 50% );
+			}
+
+			&[ dir='rtl' ]:after {
+				/* @noflip */
+				background-image: linear-gradient( to left, transparent, var( --color-surface-2 ) 50% );
+			}
+		}
+	}
+
+	&:active {
+		background-color: var( --color-surface-2--active );
+
+		.mwe-popups-extract {
+			&[ dir='ltr' ]:after {
+				/* @noflip */
+				background-image: linear-gradient( to right, transparent, var( --color-surface-2--active ) 50% );
+			}
+
+			&[ dir='rtl' ]:after {
+				/* @noflip */
+				background-image: linear-gradient( to left, transparent, var( --color-surface-2--active ) 50% );
+			}
+		}
+	}
 
 	.mwe-popups-container {
 		color: var( --color-base );
+
+		// Neutral color so dark SVG is visible
+		svg {
+			background-color: #eaecf0;
+		}
 	}
 
 	.mwe-popups-extract {
 		color: var( --color-base );
 
-		/* Stylelint rule broken for vendor prefixes: https://github.com/stylelint/stylelint/issues/1939 */
-		/* stylelint-disable function-linear-gradient-no-nonstandard-direction */
 		&[ dir='ltr' ]:after {
 			/* @noflip */
-			background-image: linear-gradient( to right, transparent, var( --background-color-dp-08 ) 50% );
+			background-image: linear-gradient( to right, transparent, var( --color-surface-1 ) 50% );
 		}
 
 		&[ dir='rtl' ]:after {
 			/* @noflip */
-			background-image: linear-gradient( to left, transparent, var( --background-color-dp-08 ) 50% );
+			background-image: linear-gradient( to left, transparent, var( --color-surface-1 ) 50% );
 		}
-		/* stylelint-enable function-linear-gradient-no-nonstandard-direction */
 	}
 
 	/* Triangles/Pointers */
 	&.mwe-popups-no-image-pointer {
 		&:after {
-			border-bottom-color: var( --background-color-dp-08 );
+			border-bottom-color: var( --color-surface-1 );
 		}
 
 		&:before {
-			border-bottom-color: var( --border-color-base--lighter );
+			border-bottom-color: var( --border-color-base );
 		}
 	}
 
 	&.mwe-popups-image-pointer {
 		&:before {
-			border-bottom-color: var( --border-color-base--lighter );
+			border-bottom-color: var( --border-color-base );
 		}
 
 		&:after {
-			border-bottom-color: var( --background-color-dp-08 );
+			border-bottom-color: var( --color-surface-1 );
 		}
 
 		&.flipped-x {
 			&:before {
-				border-bottom-color: var( --border-color-base--lighter );
+				border-bottom-color: var( --border-color-base );
 			}
 
 			&:after {
-				border-bottom-color: var( --background-color-dp-08 );
+				border-bottom-color: var( --color-surface-1 );
 			}
 		}
 	}
 
 	&.flipped-x.mwe-popups-is-tall {
 		&:before {
-			border-bottom-color: var( --border-color-base--lighter );
+			border-bottom-color: var( --border-color-base );
 		}
 	}
 
 	&.flipped-x-y {
 		&:before {
-			border-top-color: var( --border-color-base--lighter );
+			border-top-color: var( --border-color-base );
 		}
 
 		&:after {
-			border-top-color: var( --background-color-dp-08 );
+			border-top-color: var( --color-surface-1 );
 		}
 
 		&.mwe-popups-is-tall {
 			&:after {
-				border-top-color: var( --background-color-dp-08 );
+				border-top-color: var( --color-surface-1 );
 			}
 
 			&:before {
-				border-top-color: var( --border-color-base--lighter );
+				border-top-color: var( --border-color-base );
 			}
 		}
 	}
 
 	&.flipped-y {
 		&:after {
-			border-top-color: var( --background-color-dp-08 );
+			border-top-color: var( --color-surface-1 );
 		}
 
 		&:before {
-			border-top-color: var( --border-color-base--lighter );
+			border-top-color: var( --border-color-base );
+		}
+	}
+
+	/* referencePreview.less */
+	&.mwe-popups-type-reference {
+		.mwe-popups-extract {
+			.mwe-popups-fade {
+				background-image: linear-gradient( transparent, var( --color-surface-1 ) );
+			}
+
+			/* T266859 */
+			.mw-parser-output {
+				overflow-wrap: break-word;
+			}
+		}
+	}
+
+	// speed up fade animation 2x
+	&-fade {
+		&-in,
+		&-out {
+			&-up,
+			&-down {
+				animation-duration: 0.125s;
+			}
 		}
 	}
 }

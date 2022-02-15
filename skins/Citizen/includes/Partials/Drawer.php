@@ -28,7 +28,6 @@ namespace Citizen\Partials;
 use Exception;
 use ExtensionRegistry;
 use MWException;
-use ResourceLoaderSkinModule;
 use Skin;
 use SpecialPage;
 
@@ -41,33 +40,6 @@ use SpecialPage;
  *   + Upload Link
  */
 final class Drawer extends Partial {
-	/**
-	 * Get and pick the correct logo based on types and variants
-	 * Based on getLogoData() in MW 1.36
-	 *
-	 * @return array
-	 */
-	public function getLogoData() : array {
-		$logoData = ResourceLoaderSkinModule::getAvailableLogos( $this->skin->getConfig() );
-
-		// check if the logo supports variants
-		$variantsLogos = $logoData['variants'] ?? null;
-
-		if ( $variantsLogos ) {
-			$preferred = $this->skin->getOutput()->getTitle()
-				->getPageViewLanguage()->getCode();
-			$variantOverrides = $variantsLogos[$preferred] ?? null;
-			// Overrides the logo
-			if ( $variantOverrides ) {
-				foreach ( $variantOverrides as $key => $val ) {
-					$logoData[$key] = $val;
-				}
-			}
-		}
-
-		return $logoData;
-	}
-
 	/**
 	 * Render the navigation drawer
 	 * Based on buildSidebar()
@@ -141,12 +113,47 @@ final class Drawer extends Partial {
 			}
 		}
 
-		return [
+		$portals = [
 			'msg-citizen-drawer-toggle' => $this->skin->msg( 'citizen-drawer-toggle' )->text(),
+			'msg-citizen-drawer-search' => $this->skin->msg( 'citizen-drawer-search' )->text(),
 			'data-portals-first' => $firstPortal,
 			'array-portals-rest' => $props,
 			'data-portals-languages' => $languages,
+			'data-drawer-sitestats' => $this->getSiteStats(),
+			'data-drawer-subsearch' => false,
 		];
+
+		// Drawer subsearch
+		if ( $this->getConfigValue( 'CitizenEnableDrawerSubSearch' ) ) {
+			$portals['data-drawer-subsearch'] = true;
+		}
+
+		return $portals;
+	}
+
+	/**
+	 * Get messages used for site stats in the drawer
+	 *
+	 * @return array for use in Mustache template.
+	 */
+	private function getSiteStats() {
+		$props = [];
+
+		if ( $this->getConfigValue( 'CitizenEnableDrawerSiteStats' ) ) {
+			$stats = [ 'articles', 'images', 'users', 'edits' ];
+			$items = [];
+
+			foreach ( $stats as &$stat ) {
+				$items[] = [
+					'id' => $stat,
+					'value' => number_format( call_user_func( 'SiteStats::' . $stat ) ),
+					'label' => $this->skin->msg( "citizen-sitestats-$stat-label" )->text(),
+				];
+			}
+		}
+
+		$props['array-drawer-sitestats-item'] = $items;
+		return $props;
 	}
 
 	/**

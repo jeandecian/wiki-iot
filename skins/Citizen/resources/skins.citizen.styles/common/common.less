@@ -2,8 +2,7 @@
  * Framework
 */
 html {
-	scroll-behavior: smooth; // not supported by IE, Edge, Safari, and Opera, use JQuery as fallback
-	scroll-padding-top: ~'var(--height-header) + 20px'; // fixed header offset, supported by major browsers
+	scroll-padding-top: ~'calc(var(--height-header) + 20px)'; // fixed header offset, supported by major browsers
 }
 
 html,
@@ -11,9 +10,12 @@ body {
 	min-height: 100%;
 	padding: 0;
 	margin: 0;
-	background: var( --background-color-dp-00 );
+	background: var( --color-surface-0 );
 	color: var( --color-base );
-	overflow-x: hidden; // prevent overflow from scrollbar
+}
+
+:focus {
+	outline-color: var( --color-primary );
 }
 
 h1,
@@ -32,11 +34,8 @@ table {
 }
 
 hr {
-	display: none;
-}
-
-ul {
-	list-style-type: square;
+	border: 0;
+	border-top: 1px solid var( --border-color-base--darker );
 }
 
 ul,
@@ -67,13 +66,14 @@ pre,
 	padding: 1rem;
 	/* Wrap lines in overflow. T2260, T103780 */
 	white-space: pre-wrap;
+	word-break: break-word;
 }
 
 input,
 select,
 textarea {
-	border: 1px solid var( --border-color-input );
-	background-color: var( --background-color-input );
+	border: 1px solid var( --border-color-base );
+	background-color: var( --color-surface-1 );
 	color: inherit;
 }
 
@@ -98,9 +98,8 @@ textarea {
 }
 
 blockquote {
-	padding: 0 @content-margin-top * 4 * @content-scaling;
-	margin: @content-margin-top * 2 * @content-scaling;
-	color: @base-30;
+	margin: @content-margin-top var( --padding-page );
+	color: var( --color-base--subtle );
 
 	cite {
 		display: block;
@@ -110,6 +109,11 @@ blockquote {
 			content: '— ';
 		}
 	}
+}
+
+sup,
+sub {
+	line-height: 1;
 }
 
 dd {
@@ -128,7 +132,7 @@ td {
 }
 
 a {
-	color: var( --color-primary );
+	color: var( --color-link );
 	text-decoration: none !important;
 
 	&:not( [ href ] ) {
@@ -137,22 +141,22 @@ a {
 	}
 
 	&:hover {
-		color: var( --color-primary--hover );
+		color: var( --color-link--hover );
 	}
 
 	&:active {
-		color: var( --color-primary--active );
+		color: var( --color-link--active );
 	}
 
 	&.new {
-		color: var( --color-destructive ) !important; // Override visited
+		color: var( --color-link-new ) !important; // Override visited
 
 		&:hover {
-			color: var( --color-destructive--hover ) !important;
+			color: var( --color-link-new--hover ) !important;
 		}
 
 		&:active {
-			color: var( --color-destructive--active ) !important;
+			color: var( --color-link-new--active ) !important;
 		}
 	}
 
@@ -186,52 +190,8 @@ a {
 */
 .mw-body,
 .parsoid-body {
-	min-height: 80vh; // avoid footer being in the middle of the page
-	padding: 0 var( --padding-page );
-	margin-top: ~'calc(var( --height-header ) + 20px)';
 	direction: ltr;
-}
-
-.mw-body-content {
-	.plainlist ol,
-	.plainlist ul {
-		margin: 0;
-		line-height: inherit;
-		list-style: none none;
-	}
-}
-
-figcaption,
-.thumbcaption {
-	margin: @content-margin-top / 2 0 0;
-	color: @base-30;
-}
-
-.thumb {
-	> .thumbinner {
-		> a {
-			transition: @transition-box-shadow-quick;
-
-			&:hover:not( .lazy ):not( .new ) {
-				.boxshadow(2);
-
-				img {
-					transform: scale( 1.1 );
-				}
-			}
-
-			&:before {
-				content: none;
-			}
-
-			&.new {
-				display: block;
-				padding: @margin-side / 2;
-				background-color: var( --background-color-framed );
-				transition: @transition-background-quick, @transition-color-quick;
-			}
-		}
-	}
+	overflow-x: hidden; // avoid breaking layout in smaller screen sizes
 }
 
 // TODO: Think of better places to put indicators;
@@ -251,12 +211,49 @@ div.patrollink {
 	text-align: right;
 }
 
+video {
+	max-width: 100%; // Prevent overflow
+}
+
 .skin-citizen-dark {
+	color-scheme: dark;
+
 	.mw-editsection > a:before {
 		filter: invert( 1 );
 	}
 
 	.mw-indicator {
 		filter: invert( 1 ) hue-rotate( 180deg );
+
+		// Have to hardcode the color since the filter breaks the color
+		a {
+			color: @color-primary;
+
+			&:hover {
+				color: @color-primary--hover;
+			}
+
+			&:active {
+				color: @color-primary--active;
+			}
+		}
+	}
+}
+
+@media ( min-width: @width-breakpoint-tablet ) {
+	.mw-body,
+	.parsoid-body {
+		overflow-x: auto;
+	}
+
+	table {
+		display: table;
+	}
+
+	// Delay scroll animation won't happen on load
+	// Use it only for larger viewport as it is very costly
+	// on mobile devices
+	html.citizen-animations-ready {
+		scroll-behavior: smooth;
 	}
 }

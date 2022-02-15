@@ -15,9 +15,11 @@
 				visibility: visible;
 
 				&-button {
-					opacity: var( --opacity-icon-base--hover );
+					&:after {
+						opacity: var( --opacity-icon-base--hover );
+					}
 
-					&:active {
+					&:active:after {
 						opacity: var( --opacity-icon-base--active );
 					}
 				}
@@ -26,26 +28,26 @@
 	}
 
 	&-button {
-		width: var( --width-button-base );
-		height: var( --height-header );
-		opacity: var( --opacity-icon-base );
-		transition: @transition-opacity-quick;
+		position: relative;
+		font-size: 0; // Hide label text
 
-		&:hover {
-			opacity: var( --opacity-icon-base--hover );
-		}
-
-		&:active {
-			opacity: var( --opacity-icon-base--active );
-		}
-
-		&:before {
+		&:after {
 			display: block;
 			width: inherit;
 			height: inherit;
 			background-position: center;
 			background-repeat: no-repeat;
 			content: '';
+			opacity: var( --opacity-icon-base );
+			transition: @transition-opacity-quick;
+		}
+
+		&:hover:after {
+			opacity: var( --opacity-icon-base--hover );
+		}
+
+		&:active:after {
+			opacity: var( --opacity-icon-base--active );
 		}
 	}
 }
@@ -53,17 +55,13 @@
 #p-personal {
 	position: fixed;
 	top: var( --height-header );
-	right: 0;
-	left: 0;
-	min-width: 250px;
+	right: var( --padding-page );
+	left: var( --padding-page );
 	margin: 0;
 
 	ul {
 		overflow: hidden; // So that hover state is rounded
-		border: 1px solid var( --border-color-base--lighter );
-		background-color: var( --background-color-dp-08 );
-		border-radius: @border-radius-medium;
-		.boxshadow(4);
+		.citizen-card;
 	}
 
 	li:not( #pt-usergroups ):not( #pt-userpage ) {
@@ -129,52 +127,66 @@
 		}
 	}
 
-	#pt-userpage {
-		padding: 16px 12px 0 12px;
+	#pt {
+		&-user {
+			&page {
+				padding: 16px 12px 0 12px;
 
-		a {
-			justify-content: flex-start;
-			padding: 4px 8px;
-			color: var( --color-base--emphasized ) !important;
-			font-size: 16px;
-			font-weight: 600;
-			word-break: break-word;
-		}
-	}
-
-	#pt-usergroups {
-		display: flex;
-		flex-wrap: wrap;
-		padding: 0 16px 10px 16px;
-		border-bottom: 1px solid var( --border-color-base );
-
-		a {
-			padding: 2px 4px;
-			color: var( --color-base--subtle );
-		}
-	}
-
-	#pt-userpage,
-	#pt-usergroups {
-		line-height: 1;
-
-		a {
-			display: block;
-			transition: @transition-color-quick;
-
-			&:hover {
-				color: var( --color-primary--hover ) !important;
+				a {
+					justify-content: flex-start;
+					padding: 4px 8px;
+					color: var( --color-base--emphasized ) !important;
+					font-size: 16px;
+					font-weight: 600;
+					word-break: break-word;
+				}
 			}
 
-			&:active {
-				color: var( --color-primary--active ) !important;
+			&groups {
+				display: flex;
+				flex-wrap: wrap;
+				padding: 0 16px;
+				margin-bottom: 8px;
+
+				a {
+					padding: 2px 4px;
+					color: var( --color-base--subtle );
+				}
 			}
+
+			&page,
+			&groups {
+				line-height: 1;
+
+				a {
+					display: block;
+					transition: @transition-color-quick;
+
+					&:hover {
+						color: var( --color-primary--hover ) !important;
+					}
+
+					&:active {
+						color: var( --color-primary--active ) !important;
+					}
+				}
+			}
+
+			&contris {
+				padding: 0 20px 10px 20px;
+				border-bottom: 1px solid var( --border-color-base );
+				font-weight: 450;
+			}
+		}
+
+		&-anonuserpage {
+			display: none;
 		}
 	}
 }
 
 .skin-citizen-dark {
-	#personalmenu-button:before,
+	#personalmenu-button:after,
 	#p-personal a:after {
 		filter: invert( 1 );
 	}
@@ -183,6 +195,8 @@
 @media ( min-width: @width-breakpoint-tablet ) {
 	#p-personal {
 		position: absolute;
+		right: 0;
 		left: unset;
+		min-width: 250px;
 	}
 }

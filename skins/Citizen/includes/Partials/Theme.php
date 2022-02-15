@@ -51,35 +51,7 @@ final class Theme extends Partial {
 			);
 		}
 
-		$cookieTheme = $this->out->getRequest()->getCookie( 'skin-citizen-theme', null, 'auto' );
-		if ( $cookieTheme !== 'auto' ) {
-			$theme = $cookieTheme;
-		}
-
 		// Add HTML class based on theme set
 		$this->out->addHtmlClasses( 'skin-citizen-' . $theme );
-		if ( $this->out->getRequest()->getCookie( 'skin-citizen-theme-override' ) === null ) {
-			// Only set the theme cookie if the theme wasn't overridden by the user through the button
-			$this->out->getRequest()->response()->setCookie( 'skin-citizen-theme', $theme, 0, [
-				'httpOnly' => false,
-			] );
-		}
-
-		// Script content at 'skins.citizen.scripts.theme/inline.js
-        // @phpcs:ignore Generic.Files.LineLength.TooLong
-		$this->out->getOutput()->addHeadItem( 'theme-switcher', '<script>window.switchTheme=()=>{var e=t=>["auto","dark","light"].map(e=>t+e);const t=document.getElementById("theme-toggle");try{const c=document.cookie.match(/skin-citizen-theme=(dark|light|auto)/);var n=null!==c?c.pop():null;null!==n&&(document.documentElement.classList.remove(...e("skin-citizen-")),document.documentElement.classList.add("skin-citizen-"+n),t.classList.remove(...e("theme-toggle")),t.classList.add("theme-toggle-"+n))}catch(e){}},window.switchTheme();</script>' );
-
-		// Add styles and scripts module
-		if ( $theme === 'auto' ) {
-			$options['scripts'] = array_merge(
-				$options['scripts'],
-				[ 'skins.citizen.scripts.theme' ]
-			);
-		}
-
-		$options['styles'] = array_merge(
-			$options['styles'],
-			[ 'skins.citizen.styles.theme' ]
-		);
 	}
 }

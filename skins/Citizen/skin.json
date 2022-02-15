@@ -1,9 +1,10 @@
 {
 	"name": "Citizen",
-	"version": "1.3.1",
+	"version": "1.10.0",
 	"author": [
 		"[https://www.mediawiki.org/wiki/User:Alistair3149 Alistair3149]",
-		"[https://www.mediawiki.org/wiki/User:Octfx Octfx]"
+		"[https://www.mediawiki.org/wiki/User:Octfx Octfx]",
+		"..."
 	],
 	"url": "https://www.mediawiki.org/wiki/Skin:Citizen",
 	"descriptionmsg": "citizen-skin-desc",
@@ -11,7 +12,7 @@
 	"license-name": "GPL-3.0-or-later",
 	"type": "skin",
 	"requires": {
-		"MediaWiki": ">= 1.35.0"
+		"MediaWiki": ">= 1.35.2"
 	},
 	"ValidSkinNames": {
 		"citizen": {
@@ -25,9 +26,7 @@
 					],
 					"styles": [
 						"skins.citizen.styles",
-						"skins.citizen.styles.theme",
 						"skins.citizen.styles.fonts",
-						"skins.citizen.styles.toc",
 						"skins.citizen.icons",
 						"skins.citizen.icons.ca",
 						"skins.citizen.icons.es",
@@ -35,8 +34,17 @@
 						"skins.citizen.icons.t",
 						"skins.citizen.icons.pt",
 						"skins.citizen.icons.footer",
-						"skins.citizen.icons.badges",
-						"skins.citizen.icons.theme"
+						"skins.citizen.icons.badges"
+					],
+					"messages": [
+						"citizen-drawer-toggle",
+						"citizen-drawer-search",
+						"citizen-personalmenu-toggle",
+						"citizen-search-toggle",
+						"citizen-theme-toggle",
+						"citizen-footer-desc",
+						"citizen-footer-tagline",
+						"citizen-jumptotop"
 					]
 				}
 			]
@@ -67,20 +75,13 @@
 		"PreferenceHooks": {
 			"class": "Citizen\\Hooks\\PreferenceHooks"
 		},
-		"ResourceLoaderHooks": {
-			"class": "Citizen\\Hooks\\ResourceLoaderHooks"
-		},
 		"SkinHooks": {
 			"class": "Citizen\\Hooks\\SkinHooks"
-		},
-		"ThumbnailHooks": {
-			"class": "Citizen\\Hooks\\ThumbnailHooks"
 		}
 	},
 	"Hooks": {
-		"ResourceLoaderGetConfigVars": "ResourceLoaderHooks",
 		"SkinPageReadyConfig": "SkinHooks",
-		"ThumbnailBeforeProduceHTML": "ThumbnailHooks",
+		"BeforePageDisplay": "SkinHooks",
 		"GetPreferences": "PreferenceHooks",
 		"PreferencesFormPreSave": "PreferenceHooks"
 	},
@@ -91,17 +92,29 @@
 				"desktop",
 				"mobile"
 			],
-			"features": [],
+			"features": {
+				"content-parser-output": false,
+				"content-body": false,
+				"logo": false,
+				"legacy": false,
+				"toc": false
+			},
 			"styles": [ "resources/skins.citizen.styles/skin.less" ]
 		},
-		"skins.citizen.styles.theme": {
+		"skins.citizen.styles.debug": {
 			"class": "ResourceLoaderSkinModule",
 			"targets": [
 				"desktop",
 				"mobile"
 			],
-			"features": [],
-			"styles": [ "resources/skins.citizen.styles.theme/skins.citizen.styles.theme.less" ]
+			"features": {
+				"content-parser-output": false,
+				"content-body": false,
+				"logo": false,
+				"legacy": false,
+				"toc": false
+			},
+			"styles": [ "resources/skins.citizen.styles.debug/skins.citizen.styles.debug.less" ]
 		},
 		"skins.citizen.styles.fonts": {
 			"class": "ResourceLoaderSkinModule",
@@ -109,26 +122,44 @@
 				"desktop",
 				"mobile"
 			],
-			"features": [],
+			"features": {
+				"content-parser-output": false,
+				"content-body": false,
+				"logo": false,
+				"legacy": false,
+				"toc": false
+			},
 			"styles": [ "resources/skins.citizen.styles.fonts/skins.citizen.styles.fonts.less" ]
 		},
-		"skins.citizen.styles.lazyload": {
+		"skins.citizen.styles.sections": {
 			"class": "ResourceLoaderSkinModule",
 			"targets": [
 				"desktop",
 				"mobile"
 			],
-			"features": [],
-			"styles": [ "resources/skins.citizen.styles.lazyload/skins.citizen.styles.lazyload.less" ]
+			"features": {
+				"content-parser-output": false,
+				"content-body": false,
+				"logo": false,
+				"legacy": false,
+				"toc": false
+			},
+			"styles": [ "resources/skins.citizen.styles.sections/skins.citizen.styles.sections.less" ]
 		},
-		"skins.citizen.styles.search": {
+		"skins.citizen.styles.sitestats": {
 			"class": "ResourceLoaderSkinModule",
 			"targets": [
 				"desktop",
 				"mobile"
 			],
-			"features": [],
-			"styles": [ "resources/skins.citizen.styles.search/skins.citizen.styles.search.less" ]
+			"features": {
+				"content-parser-output": false,
+				"content-body": false,
+				"logo": false,
+				"legacy": false,
+				"toc": false
+			},
+			"styles": [ "resources/skins.citizen.styles.sitestats/skins.citizen.styles.sitestats.less" ]
 		},
 		"skins.citizen.styles.toc": {
 			"class": "ResourceLoaderSkinModule",
@@ -136,52 +167,85 @@
 				"desktop",
 				"mobile"
 			],
-			"features": [],
+			"features": {
+				"content-parser-output": false,
+				"content-body": false,
+				"logo": false,
+				"legacy": false,
+				"toc": false
+			},
 			"styles": [ "resources/skins.citizen.styles.toc/skins.citizen.styles.toc.less" ]
 		},
 		"skins.citizen.scripts": {
 			"packageFiles": [
 				"resources/skins.citizen.scripts/skin.js",
-				"resources/skins.citizen.scripts/themeToggle.js",
+				{
+					"name": "resources/skins.citizen.scripts/config.json",
+					"callback": "Citizen\\Hooks\\ResourceLoaderHooks::getCitizenResourceLoaderConfig"
+				},
+				"resources/skins.citizen.scripts/theme.js",
 				"resources/skins.citizen.scripts/search.js",
 				"resources/skins.citizen.scripts/checkboxHack.js"
-			],
-			"dependencies": [
-				"mediawiki.page.ready",
-				"mediawiki.cookie"
-			]
-		},
-		"skins.citizen.scripts.lazyload": {
-			"scripts": [
-				"resources/skins.citizen.scripts.lazyload/skins.citizen.scripts.lazyload.js"
-			]
-		},
-		"skins.citizen.scripts.search": {
-			"scripts": [
-				"resources/skins.citizen.scripts.search/underscore.partial.js",
-				"resources/skins.citizen.scripts.search/wm-typeahead.js",
-				"resources/skins.citizen.scripts.search/typeahead-init.js"
-			],
-			"dependencies": [
-				"mediawiki.api",
-				"oojs-ui-core.styles"
-			],
-			"messages": [
-				"citizen-search-fulltext"
-			]
-		},
-		"skins.citizen.scripts.theme": {
-			"scripts": [
-				"resources/skins.citizen.scripts.theme/theme-switcher.js"
-			],
-			"dependencies": [
-				"mediawiki.api",
-				"mediawiki.cookie"
 			]
 		},
 		"skins.citizen.scripts.toc": {
 			"scripts": [
 				"resources/skins.citizen.scripts.toc/skins.citizen.scripts.toc.js"
+			]
+		},
+		"skins.citizen.scripts.drawer": {
+			"scripts": [
+				"resources/skins.citizen.scripts.drawer/skins.citizen.scripts.drawer.js"
+			]
+		},
+		"skins.citizen.scripts.sections": {
+			"scripts": [
+				"resources/skins.citizen.scripts.sections/skins.citizen.scripts.sections.js"
+			]
+		},
+		"skins.citizen.search": {
+			"templates": [
+				"resources/skins.citizen.search/templates/typeahead.mustache"
+			],
+			"styles": [
+				"resources/skins.citizen.search/skins.citizen.search.less"
+			],
+			"packageFiles": [
+				"resources/skins.citizen.search/main.js",
+				{
+					"name": "resources/skins.citizen.search/config.json",
+					"callback": "Citizen\\Hooks\\ResourceLoaderHooks::getCitizenSearchResourceLoaderConfig"
+				},
+				"resources/skins.citizen.search/typeahead.js",
+				"resources/skins.citizen.search/gateway/gateway.js",
+				"resources/skins.citizen.search/gateway/mwActionApi.js",
+				"resources/skins.citizen.search/gateway/mwRestApi.js"
+			],
+			"messages": [
+				"citizen-search-fulltext",
+				"citizen-search-fulltext-empty"
+			]
+		},
+		"skins.citizen.preferences": {
+			"templates": [
+				"resources/skins.citizen.preferences/templates/preferences.mustache"
+			],
+			"styles": [
+				"resources/skins.citizen.preferences/skins.citizen.preferences.less"
+			],
+			"packageFiles": [
+				"resources/skins.citizen.preferences/skins.citizen.preferences.js"
+			],
+			"messages": [
+				"preferences",
+				"prefs-citizen-theme-label",
+				"prefs-citizen-theme-option-auto",
+				"prefs-citizen-theme-option-light",
+				"prefs-citizen-theme-option-dark",
+				"prefs-citizen-fontsize-label",
+				"prefs-citizen-pagewidth-label",
+				"prefs-citizen-lineheight-label",
+				"prefs-citizen-resetbutton-label"
 			]
 		},
 		"skins.citizen.icons": {
@@ -195,7 +259,7 @@
 						"rtl": "resources/skins.citizen.icons/toc-rtl.svg"
 					}
 				},
-				"#personalmenu-button:before": "resources/skins.citizen.icons/shared/userAvatar.svg",
+				"#personalmenu-button:after": "resources/skins.citizen.icons/shared/userAvatar.svg",
 				"#searchform-icon": "resources/skins.citizen.icons/shared/search.svg",
 				"#searchform-random": "resources/skins.citizen.icons/shared/random.svg",
 				".page-actions-more:before": "resources/skins.citizen.icons/more.svg"
@@ -203,7 +267,7 @@
 		},
 		"skins.citizen.icons.ca": {
 			"class": "ResourceLoaderImageModule",
-			"selector": "#ca-{name} > *:after",
+			"selector": "#ca-{name} > a:after",
 			"defaultColor": "#000",
 			"images": {
 				"view": "resources/skins.citizen.icons/shared/article.svg",
@@ -217,6 +281,7 @@
 				"unprotect": "resources/skins.citizen.icons/shared/unLock.svg",
 				"watch": "resources/skins.citizen.icons/shared/eye.svg",
 				"unwatch": "resources/skins.citizen.icons/shared/eyeClosed.svg",
+				"addsection": "resources/skins.citizen.icons/shared/add.svg",
 				"talk": "resources/skins.citizen.icons/shared/discussion.svg",
 				"nstab-main": "resources/skins.citizen.icons/shared/article.svg",
 				"translate": "resources/skins.citizen.icons/shared/language.svg"
@@ -233,7 +298,7 @@
 		},
 		"skins.citizen.icons.n": {
 			"class": "ResourceLoaderImageModule",
-			"selector": "#n-{name} > *:after",
+			"selector": "#n-{name} > a:after",
 			"defaultColor": "#000",
 			"images": {
 				"mainpage-description": "resources/skins.citizen.icons/shared/home.svg",
@@ -244,7 +309,7 @@
 		},
 		"skins.citizen.icons.t": {
 			"class": "ResourceLoaderImageModule",
-			"selector": "#t-{name} > *:after",
+			"selector": "#t-{name} > a:after",
 			"defaultColor": "#000",
 			"images": {
 				"whatlinkshere": "resources/skins.citizen.icons/shared/whatlinkshere.svg",
@@ -262,7 +327,7 @@
 		},
 		"skins.citizen.icons.pt": {
 			"class": "ResourceLoaderImageModule",
-			"selector": "#pt-{name} > *:after",
+			"selector": "#pt-{name} > a:after",
 			"defaultColor": "#000",
 			"images": {
 				"mytalk": "resources/skins.citizen.icons/shared/userTalk.svg",
@@ -284,22 +349,20 @@
 				"lastmod": "resources/skins.citizen.icons.footer/history_white.svg"
 			}
 		},
-		"skins.citizen.icons.search": {
+		"skins.citizen.icons.sections": {
 			"class": "ResourceLoaderImageModule",
-			"selector": "{name}",
+			"selector": ".section-toggle",
 			"useDataURI": false,
 			"images": {
-				".suggestion-thumbnail": "resources/skins.citizen.icons.search/noimage.svg",
-				"#suggestion-special-icon": "resources/skins.citizen.icons.search/searchfulltext.svg"
+				"collapse": "resources/skins.citizen.icons/shared/collapse.svg"
 			}
 		},
-		"skins.citizen.icons.theme": {
+		"skins.citizen.icons.preferences": {
 			"class": "ResourceLoaderImageModule",
-			"selector": ".theme-toggle-{name}",
+			"selector": "#citizen-pref-{name}:after",
 			"useDataURI": false,
 			"images": {
-				"light": "resources/skins.citizen.icons/shared/moon.svg",
-				"dark": "resources/skins.citizen.icons/shared/bright.svg"
+				"toggle": "resources/skins.citizen.icons/shared/settings.svg"
 			}
 		}
 	},
@@ -312,19 +375,44 @@
 			"+ext.advancedSearch.initialstyles": "skinStyles/extensions/AdvancedSearch/ext.advancedSearch.initialstyles.less",
 			"+ext.advancedSearch.styles": "skinStyles/extensions/AdvancedSearch/ext.advancedSearch.styles.less",
 
+			"+ext.ApprovedRevs": "skinStyles/extensions/ApprovedRevs/ext.ApprovedRevs.less",
+
+			"+ext.babel": "skinStyles/extensions/Babel/ext.babel.less",
+
+			"+ext.cargo.main": "skinStyles/extensions/Cargo/ext.cargo.main.less",
+
 			"+ext.categoryTree.css": "skinStyles/extensions/CategoryTree/ext.categoryTree.css.less",
 
 			"+ext.cite.styles": "skinStyles/extensions/Cite/ext.cite.styles.less",
 
-			"+ext.echo.styles.badge": "skinStyles/extensions/Echo/ext.echo.styles.badge.less",
+			"+ext.cleanchanges.uls": "skinStyles/extensions/CleanChanges/ext.cleanchanges.uls.less",
+
+			"+ext.CodeMirror.lib": "skinStyles/extensions/CodeMirror/ext.CodeMirror.lib.less",
+			"+ext.CodeMirror.mode.mediawiki": "skinStyles/extensions/CodeMirror/ext.CodeMirror.mode.mediawiki.less",
+			"+ext.CodeMirror.visualEditor.init": "skinStyles/extensions/CodeMirror/ext.CodeMirror.visualEditor.init.less",
+
+			"+ext.dismissableSiteNotice.styles": "skinStyles/extensions/DismissableSiteNotice/ext.dismissableSiteNotice.less",
+
+			"+ext.echo.ui.desktop": "skinStyles/extensions/Echo/ext.echo.ui.desktop.less",
 			"+ext.echo.ui": "skinStyles/extensions/Echo/ext.echo.ui.less",
+			"+ext.echo.styles.badge": "skinStyles/extensions/Echo/ext.echo.styles.badge.less",
+			"+ext.echo.styles.notifications": "skinStyles/extensions/Echo/ext.echo.styles.notifications.less",
+			"+ext.echo.styles.alert": "skinStyles/extensions/Echo/ext.echo.styles.alert.less",
+			"+ext.echo.special": "skinStyles/extensions/Echo/ext.echo.special.less",
+			"+ext.echo.styles.special": "skinStyles/extensions/Echo/ext.echo.styles.special.less",
 
 			"+ext.flow": "skinStyles/extensions/Flow/ext.flow.less",
 			"+ext.flow.styles.base": "skinStyles/extensions/Flow/ext.flow.styles.base.less",
 			"+ext.flow.ui": "skinStyles/extensions/Flow/ext.flow.ui.less",
 
+			"+ext.graph.styles": "skinStyles/extensions/Graph/ext.graph.styles.less",
+
 			"+ext.Lingo": "skinStyles/extensions/Lingo/ext.Lingo.less",
 			"+ext.Lingo.jquery.qtip": "skinStyles/extensions/Lingo/ext.Lingo.jquery.qtip.less",
+
+			"+ext.pygments": "skinStyles/extensions/SyntaxHighlight_GeSHi/ext.pygments.less",
+
+			"+ext.MsUpload": "skinStyles/extensions/MsUpload/ext.MsUpload.less",
 
 			"+ext.relatedArticles.cards": "skinStyles/extensions/RelatedArticles/ext.relatedArticles.cards.less",
 			"+ext.relatedArticles.readMore": "skinStyles/extensions/RelatedArticles/ext.relatedArticles.readMore.less",
@@ -388,6 +476,8 @@
 
 			"+ext.srf.listwidget": "skinStyles/extensions/SemanticResultFormats/listwidget/ext.srf.listwidget.less",
 
+			"+ext.MWOAuth.styles": "skinStyles/extensions/OAuth/ext.MWOAuth.styles.less",
+
 			"+ext.srf.pagewidget.carousel": "skinStyles/extensions/SemanticResultFormats/pagewidget/ext.srf.pagewidget.carousel.less",
 
 			"+ext.srf.slideshow": "skinStyles/extensions/SemanticResultFormats/slideshow/ext.srf.slideshow.less",
@@ -400,25 +490,42 @@
 
 			"+onoi.dataTables.styles": "skinStyles/extensions/SemanticResultFormats/jquery/jquery.dataTables.less",
 
+			"+ext.tmh.player.styles": "skinStyles/extensions/TimedMediaHandler/ext.tmh.player.styles.less",
+
 			"+ext.translate": "skinStyles/extensions/Translate/ext.translate.less",
-			"+ext.translate.editor": "skinStyles/extensions/Translate/ext.translate.editor.less",
-			"+ext.translate.loader": "skinStyles/extensions/Translate/ext.translate.loader.less",
+			"+ext.translate.dropdownmenu": "skinStyles/extensions/Translate/ext.translate.dropdownmenu.less",
+			"+ext.translate.specialpages.styles": "skinStyles/extensions/Translate/ext.translate.specialpages.styles.less",
 			"+ext.translate.messagetable": "skinStyles/extensions/Translate/ext.translate.messagetable.less",
+			"+ext.translate.quickedit": "skinStyles/extensions/Translate/ext.translate.quickedit.less",
+			"+ext.translate.messagerenamedialog": "skinStyles/extensions/Translate/ext.translate.messagerenamedialog.less",
+			"+ext.translate.groupselector": "skinStyles/extensions/Translate/ext.translate.groupselector.less",
+			"+ext.translate.editor": "skinStyles/extensions/Translate/ext.translate.editor.less",
+			"+ext.translate.special.managetranslatorsandbox": "skinStyles/extensions/Translate/ext.translate.special.managetranslatorsandbox.less",
 			"+ext.translate.special.translate": "skinStyles/extensions/Translate/ext.translate.special.translate.less",
+			"+ext.translate.special.translate.styles": "skinStyles/extensions/Translate/ext.translate.special.translate.styles.less",
+			"+ext.translate.specialTranslationStash": "skinStyles/extensions/Translate/ext.translate.specialTranslationStash.less",
+			"+ext.translate.translationstats.graphbuilder": "skinStyles/extensions/Translate/ext.translate.translationstats.graphbuilder.less",
+			"+ext.translate.statsbar": "skinStyles/extensions/Translate/ext.translate.statsbar.less",
+			"+ext.translate.statstable": "skinStyles/extensions/Translate/ext.translate.statstable.less",
 			"+ext.translate.tag.languages": "skinStyles/extensions/Translate/ext.translate.tag.languages.less",
 
 			"+ext.uls.common": "skinStyles/extensions/UniversalLanguageSelector/ext.uls.common.less",
-			"+ext.uls.pt": "skinStyles/extensions/UniversalLanguageSelector/ext.uls.pt.less",
+			"+ext.uls.compactlinks": "skinStyles/extensions/UniversalLanguageSelector/ext.uls.compactlinks.less",
+			"+ext.uls.displaysettings": "skinStyles/extensions/UniversalLanguageSelector/ext.uls.displaysettings.less",
+			"+ext.uls.interface": "skinStyles/extensions/UniversalLanguageSelector/ext.uls.interface.less",
+			"+ext.uls.interlanguage": "skinStyles/extensions/UniversalLanguageSelector/ext.uls.interlanguage.less",
+			"+ext.uls.languagesettings": "skinStyles/extensions/UniversalLanguageSelector/ext.uls.languagesettings.less",
+			"+ext.uls.setlang": "skinStyles/extensions/UniversalLanguageSelector/ext.uls.setlang.less",
 
 			"ext.CookieWarning.styles": "skinStyles/extensions/CookieWarning/ext.CookieWarning.styles.less",
 
 			"+ext.popups.main": "skinStyles/extensions/Popups/ext.popups.main.less",
 
 			"+ext.Tabber": "skinStyles/extensions/Tabber/ext.Tabber.less",
+			"+ext.tabberNeue": "skinStyles/extensions/TabberNeue/ext.tabberNeue.less",
 
-			"+ext.uploadWizard.uploadCampaign.display": "skinStyles/extensions/UploadWizard/ext.uploadWizard.uploadCampaign.display.less",
-			"+ext.uploadWizard.uploadCampaign.list": "skinStyles/extensions/UploadWizard/ext.uploadWizard.uploadCampaign.list.less",
 			"+ext.uploadWizard": "skinStyles/extensions/UploadWizard/ext.uploadWizard.less",
+			"+ext.uploadWizard.page.styles": "skinStyles/extensions/UploadWizard/uploadWizard.noWizard.less",
 
 			"+ext.visualEditor.desktopArticleTarget.init": "skinStyles/extensions/VisualEditor/ext.visualEditor.less",
 
@@ -428,6 +535,13 @@
 
 			"+mediawiki.action.history.styles": "skinStyles/mediawiki/action/mediawiki.action.history.styles.less",
 			"+mediawiki.action.view.filepage": "skinStyles/mediawiki/action/mediawiki.action.view.filepage.less",
+
+			"+mediawiki.notification": "skinStyles/mediawiki/mediawiki.notification.less",
+
+			"+mediawiki.pager.tablePager": "skinStyles/mediawiki/mediawiki.pager.tablePager.less",
+
+			"mediawiki.skinning.content.parsoid": [],
+			"mediawiki.skinning.interface": [],
 
 			"+mediawiki.special": "skinStyles/mediawiki/special/mediawiki.special.less",
 			"+mediawiki.special.apisandbox": "skinStyles/mediawiki/special/mediawiki.special.apisandbox.less",
@@ -448,14 +562,16 @@
 			"+mediawiki.rcfilters.filters.base.styles": "skinStyles/mediawiki/mediawiki.rcfilters.filters.base.styles.less",
 			"+mediawiki.widgets.DateInputWidget.styles": "skinStyles/mediawiki/mediawiki.widgets.DateInputWidget.styles.less",
 
-			"+oojs-ui-core.styles": "skinStyles/oojs/oojs-ui-core.less",
-			"+oojs-ui-toolbars": "skinStyles/oojs/oojs-ui-toolbars.less",
-			"+oojs-ui-widgets": "skinStyles/oojs/oojs-ui-widgets.less",
-			"+oojs-ui-windows": "skinStyles/oojs/oojs-ui-windows.less",
+			"+oojs-ui-core.styles": "skinStyles/ooui/oojs-ui-core.less",
+			"+oojs-ui-toolbars": "skinStyles/ooui/oojs-ui-toolbars.less",
+			"+oojs-ui-widgets": "skinStyles/ooui/oojs-ui-widgets.less",
+			"+oojs-ui-windows": "skinStyles/ooui/oojs-ui-windows.less",
 
-			"+jquery.ui.core.styles": "skinStyles/jquery.ui/smoothness/jquery.ui.theme.less",
+			"+jquery.ui": "skinStyles/jquery.ui/smoothness/jquery.ui.theme.less",
 
-			"+mmv": "skinStyles/extensions/MultimediaViewer/mmv.less"
+			"+mmv": "skinStyles/extensions/MultimediaViewer/mmv.less",
+
+			"+ext.WSSearchFront.module": "skinStyles/extensions/WSSearchFront/ext.WSSearchFront.module.less"
 		}
 	},
 	"config_prefix": "wgCitizen",
@@ -467,7 +583,7 @@
 			"public": true
 		},
 		"ThemeColor": {
-			"value": "#11151d",
+			"value": "#131a21",
 			"description": "The theme color defined in the meta tag",
 			"descriptionmsg": "citizen-config-themecolor",
 			"public": true
@@ -484,78 +600,6 @@
 			"descriptionmsg": "citizen-config-preconnectorigin",
 			"public": true
 		},
-		"EnableCSP": {
-			"value": false,
-			"description": "Enable or disable Content Security Policy",
-			"descriptionmsg": "citizen-config-enablecsp",
-			"public": true
-		},
-		"EnableCSPReportMode": {
-			"value": false,
-			"description": "Enable or disable Content Security Policy report only mode, it will override the CSP when enabled",
-			"descriptionmsg": "citizen-config-enablecspreportmode",
-			"public": true
-		},
-		"CSPDirective": {
-			"value": "",
-			"description": "The string of your CSP directive",
-			"descriptionmsg": "citizen-config-cspdirective",
-			"public": true
-		},
-		"EnableHSTS": {
-			"value": false,
-			"description": "Enable or disable HTTP Strict Transport Security",
-			"descriptionmsg": "citizen-config-enablehsts",
-			"public": true
-		},
-		"HSTSMaxAge": {
-			"value": 300,
-			"description": "Time in second that the browser should remember that a site is only to be accessed using HTTPS",
-			"descriptionmsg": "citizen-config-hstsmaxage",
-			"public": true
-		},
-		"HSTSIncludeSubdomains": {
-			"value": false,
-			"description": "Apply HSTS to all of the site's subdomains",
-			"descriptionmsg": "citizen-config-hstsincludesubdomains",
-			"public": true
-		},
-		"HSTSPreload": {
-			"value": false,
-			"description": "Enable or disable HSTS preload",
-			"descriptionmsg": "citizen-config-hstspreload",
-			"public": true
-		},
-		"EnableDenyXFrameOptions": {
-			"value": false,
-			"description": "Enable or disable the deny X-Frame-Options header",
-			"descriptionmsg": "citizen-config-enabledenyxframeoptions",
-			"public": true
-		},
-		"EnableXXSSProtection": {
-			"value": false,
-			"description": "Enable or disable the X-XSS-Protection header",
-			"descriptionmsg": "citizen-config-enablexxssprotection",
-			"public": true
-		},
-		"EnableStrictReferrerPolicy": {
-			"value": false,
-			"description": "Enable or disable strict-origin-when-cross-origin referrer policy",
-			"descriptionmsg": "citizen-config-enablestrictreferrerpolicy",
-			"public": true
-		},
-		"EnableFeaturePolicy": {
-			"value": false,
-			"description": "Enable or disable Feature Policy",
-			"descriptionmsg": "citizen-config-enablefeaturepolicy",
-			"public": true
-		},
-		"FeaturePolicyDirective": {
-			"value": "",
-			"description": "The string of your Feature Policy directive",
-			"descriptionmsg": "citizen-config-featurepolicydirective",
-			"public": true
-		},
 		"EnableManifest": {
 			"value": true,
 			"description": "Enable or disable web app manifest",
@@ -563,13 +607,13 @@
 			"public": true
 		},
 		"ManifestThemeColor": {
-			"value": "#11151d",
+			"value": "#131a21",
 			"description": "The theme color defined in the web app manifest",
 			"descriptionmsg": "citizen-config-manfiestthemecolor",
 			"public": true
 		},
 		"ManifestBackgroundColor": {
-			"value": "#fff",
+			"value": "#131a21",
 			"description": "The background color defined in the web app manifest",
 			"descriptionmsg": "citizen-config-manifestbackgroundcolor",
 			"public": true
@@ -578,6 +622,12 @@
 			"value": true,
 			"description": "Enable or disable rich search suggestions",
 			"descriptionmsg": "citizen-config-enablesearch",
+			"public": true
+		},
+		"SearchGateway": {
+			"value": "mwActionApi",
+			"description": "Which gateway to use for fetching search suggestion. Avaliable options: [mwActionApi|mwRestApi]",
+			"descriptionmsg": "citizen-config-searchgateway",
 			"public": true
 		},
 		"SearchDescriptionSource": {
@@ -598,16 +648,28 @@
 			"descriptionmsg": "citizen-config-showpagetools",
 			"public": true
 		},
-		"EnableLazyload": {
-			"value": false,
-			"description": "Enable or disable image lazyloading",
-			"descriptionmsg": "citizen-config-enablelazyload",
-			"public": true
-		},
 		"PortalAttach": {
 			"value": "first",
 			"description": "Label of the portal to attach links to upload and special pages to",
 			"descriptionmsg": "citizen-config-portalattach",
+			"public": true
+		},
+		"EnableDrawerSubSearch": {
+			"value": false,
+			"description": "Enables to search the drawer for menu entries",
+			"descriptionmsg": "citizen-config-enabledrawersubsearch",
+			"public": true
+		},
+		"EnableCollapsibleSections": {
+			"value": true,
+			"description": "Enables or disable collapsible sections on content pages",
+			"descriptionmsg": "citizen-config-enablecollapsiblesections",
+			"public": true
+		},
+		"EnableDrawerSiteStats": {
+			"value": true,
+			"description": "Enables the site statistics in drawer menu",
+			"descriptionmsg": "citizen-config-enabledrawersitestats",
 			"public": true
 		}
 	},

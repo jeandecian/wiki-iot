@@ -1,66 +1,80 @@
 /*
- * Citizen - Related Articles Styles
- * https://starcitizen.tools
+ * Citizen
+ *
+ * SkinStyles for Extension:RelatedArticles
+ * Module: ext.relatedArticles.cards
+ * Version: REL1_35 0f27333
+ *
+ * Date: 2021-08-31
 */
 
 @import '../../../resources/variables.less';
 @import '../../../resources/mixins.less';
 
 .ext-related-articles-card-list {
-	overflow: visible; // Show shadow
-	padding-top: @content-margin-top; // Give room for shadows and translate
-	margin-top: 0;
-
-	.ext-related-articles-card {
-		border: 1px solid @base-80 !important;
-		border-radius: 0 !important;
-		transition: @transition-transform-quick;
-		.boxshadow(1);
-
-		&:hover {
-			.boxshadow(3);
-			transform: translateY( -2px );
+	h3 {
+		a {
+			color: var( --color-base--emphasized );
 		}
 
-		> a:hover {
+		&:after {
+			background-image: linear-gradient( to right, transparent, var( --color-surface-1 ) 50% );
+		}
+	}
+
+	.ext-related-articles-card {
+		border-color: var( --border-color-base );
+		background-color: var( --color-surface-1 );
+		.boxshadow(1);
+
+		&:first-child {
+			border-radius: var( --border-radius--medium ) var( --border-radius--medium ) 0 0;
+		}
+
+		&:last-child {
+			border-radius: 0 0 var( --border-radius--medium ) var( --border-radius--medium );
+		}
+	}
+
+	.ext-related-articles-card > a {
+		&:hover {
+			.boxshadow(2);
+		}
+
+		&:active {
 			box-shadow: none;
 		}
 	}
-}
 
-.ext-related-articles-card-extract:after {
-	position: absolute;
-	right: 0;
-	bottom: 0;
-	width: 10%;
-	height: 1em;
-	background: linear-gradient( to right, rgba( 255, 255, 255, 0 ), rgba( 255, 255, 255, 1 ) 50% );
-	content: '';
-}
-
-.skin-citizen-dark {
-	.ext-related-articles-card-list {
-		.ext-related-articles-card {
-			border-color: @dark-bg-40 !important;
-			background-color: @dark-bg-30;
-		}
-
-		.ext-related-articles-card-thumb {
-			background-color: @dark-bg-10;
-		}
-
-		h3 {
-			&:after {
-				background: linear-gradient( to right, rgba( 255, 255, 255, 0 ), @dark-bg-30 50% );
-			}
-
-			a {
-				color: @dark-text-100;
-			}
-		}
+	.ext-related-articles-card-extract {
+		color: var( --color-base--subtle );
+		font-size: @content-caption-size;
 	}
 
-	.ext-related-articles-card-extract:after {
-		background: linear-gradient( to right, rgba( 255, 255, 255, 0 ), @dark-bg-30 50% );
+	.ext-related-articles-card-thumb {
+		background-color: var( --color-surface-2 );
+		border-radius: var( --border-radius--medium ) 0 0 var( --border-radius--medium );
+	}
+}
+
+// 720px - @width-breakpoint-tablet
+@media all and ( min-width: 720px ) {
+	.ext-related-articles-card-list {
+		border-top: 0;
+
+		.ext-related-articles-card {
+			border-color: var( --border-color-base );
+
+			// Individual border-radius when cards side by side (not stacked)
+			&,
+			&:first-child,
+			&:last-child {
+				border-radius: var( --border-radius--medium );
+			}
+
+			& + .ext-related-articles-card {
+				border-color: var( --border-color-base );
+			}
+		}
 	}
 }

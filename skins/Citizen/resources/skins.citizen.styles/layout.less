@@ -1,7 +1,14 @@
 @width-breakpoint-desktop-wider: @width-breakpoint-desktop + @width-toc * 2;
 
+.mw-body,
+.parsoid-body {
+	min-height: 80vh; // avoid footer being in the middle of the page
+	padding: 0 var( --padding-page );
+	margin-top: var( --height-header );
+}
+
 .mw-body-header,
-.mw-body-content {
+.citizen-body {
 	max-width: var( --width-layout );
 	margin-right: auto;
 	margin-left: auto;
@@ -10,12 +17,13 @@
 .mw-body-header {
 	display: flex;
 	flex-wrap: wrap;
-	margin-bottom: 0.8rem;
+	margin-top: @content-margin-top * 1.5;
+	margin-bottom: @content-margin-top;
 }
 
 .page-heading {
 	flex-grow: 1;
-	margin-bottom: 0.8rem;
+	margin-bottom: @content-margin-top;
 }
 
 .firstHeading-container {
@@ -23,45 +31,81 @@
 	align-items: center;
 }
 
-.mw-body-content {
+.citizen-body {
 	.mixin-clearfix();
 }
 
-.thumb {
-	margin: 0.6rem 0;
-
-	.thumbinner {
-		max-width: 100%;
-		margin: 0 auto;
+a.image {
+	> img {
+		max-width: inherit;
+		height: auto;
 	}
 }
 
-a.image > img {
-	max-width: 100%;
-	height: auto;
+#mw-data-after-content {
+	padding-bottom: var( --padding-page );
+	background: var( --color-surface-0 );
+}
+
+.mw-footer,
+#mw-data-after-content {
+	position: relative;
+	margin-top: var( --padding-page );
+
+	// Footer spacer
+	&:before {
+		position: absolute;
+		top: ~'calc( var( --padding-page ) * -2 )';
+		right: 0;
+		left: 0;
+		display: block;
+		height: ~'calc( var( --padding-page ) * 2 )';
+		background: var( --color-surface-0 );
+		content: '';
+		-webkit-mask-image: linear-gradient( 0deg, #000, transparent );
+		mask-image: linear-gradient( 0deg, #000, transparent );
+	}
+}
+
+#mw-data-after-content + .mw-footer {
+	margin-top: 0;
 }
 
 @media ( min-width: @width-breakpoint-tablet ) {
 	div.tleft,
+	figure.mw-halign-left,
 	div.floatleft,
 	table.floatleft {
+		/* @noflip */
 		margin-right: 1.4rem;
+		/* @noflip */
 		clear: left;
+		/* @noflip */
 		float: left;
 	}
 
 	div.tright,
+	figure.mw-halign-right,
+	figure.mw-default-size,
 	div.floatright,
 	table.floatright {
+		/* @noflip */
 		margin-left: 1.4rem;
+		/* @noflip */
 		clear: right;
+		/* @noflip */
 		float: right;
 	}
 }
 
-/* Wider page width for special pages */
+/* Wider page width for certain namespaces */
 @media ( min-width: @width-breakpoint-desktop-wide ) {
-	.ns--1 {
-		--width-layout: @width-breakpoint-desktop-wide - @padding-page * 2;
+	// 1 - Special, 6 - File, 14 - Category
+	.ns {
+		&--1,
+		&-6,
+		&-14 {
+			--width-layout: @width-breakpoint-desktop-wide - @padding-page * 2;
+		}
 	}
 }

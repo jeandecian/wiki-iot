@@ -22,12 +22,14 @@
  */
 
 use Citizen\GetConfigTrait;
+use Citizen\Partials\BodyContent;
 use Citizen\Partials\Drawer;
 use Citizen\Partials\Footer;
 use Citizen\Partials\Header;
+use Citizen\Partials\Logos;
 use Citizen\Partials\Metadata;
-use Citizen\Partials\PageLinks;
 use Citizen\Partials\PageTools;
+use Citizen\Partials\Tagline;
 use Citizen\Partials\Theme;
 
 /**
@@ -50,52 +52,10 @@ class SkinCitizen extends SkinMustache {
 	 * @inheritDoc
 	 */
 	public function __construct( $options = [] ) {
-		$skin = $this;
-		$out = $skin->getOutput();
+		// Add skin-specific features
+		$this->buildSkinFeatures( $options );
 
-		$metadata = new Metadata( $this );
-		$skinTheme = new Theme( $this );
-
-		$metadata->addMetadata();
-
-		// Theme handler
-		$skinTheme->setSkinTheme( $options );
-
-		// Load Citizen search suggestion styles if enabled
-		if ( $this->getConfigValue( 'CitizenEnableSearch' ) === true ) {
-			$options['styles'] = array_merge(
-				$options['styles'],
-				[
-					'skins.citizen.styles.search',
-					'skins.citizen.icons.search'
-				]
-			);
-		}
-
-		// Load Citizen image lazyload modules if enabled
-		if ( $this->getConfigValue( 'CitizenEnableLazyload' ) === true ) {
-			$options['scripts'] = array_merge(
-				$options['scripts'],
-				[ 'skins.citizen.scripts.lazyload' ]
-			);
-			$options['styles'] = array_merge(
-				$options['styles'],
-				[ 'skins.citizen.styles.lazyload' ]
-			);
-		}
-
-		// Load table of content script if ToC presents
-		if ( $out->isTOCEnabled() ) {
-			// Add class to body that notifies the page has TOC
-			$out->addBodyClasses( 'skin-citizen-has-toc' );
-			// Disabled style condition loading due to pop in
-			$options['scripts'] = array_merge(
-				$options['scripts'],
-				[ 'skins.citizen.scripts.toc' ]
-			);
-		}
-
-		$options['templateDirectory'] = __DIR__ . '/templates';
+		$options['templateDirectory'] = dirname( __DIR__, 1 ) . '/templates';
 		parent::__construct( $options );
 	}
 
@@ -103,14 +63,16 @@ class SkinCitizen extends SkinMustache {
 	 * @return array Returns an array of data used by Citizen skin.
 	 * @throws MWException
 	 */
-	public function getTemplateData() : array {
+	public function getTemplateData(): array {
 		$out = $this->getOutput();
 		$title = $out->getTitle();
 
 		$header = new Header( $this );
+		$logos = new Logos( $this );
 		$drawer = new Drawer( $this );
+		$tagline = new Tagline( $this );
+		$bodycontent = new BodyContent( $this );
 		$footer = new Footer( $this );
-		$links = new PageLinks( $this );
 		$tools = new PageTools( $this );
 
 		// Naming conventions for Mustache parameters.
@@ -138,14 +100,14 @@ class SkinCitizen extends SkinMustache {
 					'href' => Skin::makeMainPageUrl(),
 				]
 			),
-			'data-logos' => $drawer->getLogoData(),
+			'data-logos' => $logos->getLogoData(),
 
 			'data-header' => [
 				'data-drawer' => $drawer->buildDrawer(),
 				'data-extratools' => $header->getExtraTools(),
 				'data-personal-menu' => $header->buildPersonalMenu(),
-				'data-theme-toggle' => $header->buildThemeToggleProps(),
 				'data-search-box' => $header->buildSearchProps(),
+				'msg-citizen-jumptotop' => $this->msg( 'citizen-jumptotop' )->text() . ' [home]',
 			],
 
 			'data-pagetools' => $tools->buildPageTools(),
@@ -153,17 +115,11 @@ class SkinCitizen extends SkinMustache {
 			'html-newtalk' => $newTalksHtml ? '<div class="usermessage">' . $newTalksHtml . '</div>' : '',
 			'page-langcode' => $title->getPageViewLanguage()->getHtmlCode(),
 
-			// Remember that the string '0' is a valid title.
-			// From OutputPage::getPageTitle, via ::setPageTitle().
-			'html-title' => $out->getPageTitle(),
+			'msg-tagline' => $tagline->getTagline( $out ),
 
-			'msg-tagline' => $this->msg( 'tagline' )->text(),
+			'html-body-content--formatted' => $bodycontent->buildBodyContent( $out ),
 
-			'data-pagelinks' => $links->buildPageLinks(),
-
-			'html-categories' => $this->getCategories(),
-
-			'data-footer' => $footer->getFooterData(),
+			'data-citizen-footer' => $footer->getFooterData(),
 		];
 	}
 
@@ -204,6 +160,17 @@ class SkinCitizen extends SkinMustache {
 	}
 
 	/**
+	 * Change access to public, as it is used in partials
+	 *
+	 * @param Title $title
+	 * @param string $html body text
+	 * @return string
+	 */
+	final public function wrapHTMLPublic( $title, $html ) {
+		return parent::wrapHTML( $title, $html );
+	}
+
+	/**
 	 * @param string $label to be used to derive the id and human readable label of the menu
 	 *  If the key has an entry in the constant MENU_LABEL_KEYS then that message will be used for the
 	 *  human readable text instead.
@@ -215,7 +182,7 @@ class SkinCitizen extends SkinMustache {
 		string $label,
 		array $urls = [],
 		array $options = []
-	) : array {
+	): array {
 		$skin = $this->getSkin();
 
 		// For some menu items, there is no language key corresponding with its menu key.
@@ -259,5 +226,78 @@ class SkinCitizen extends SkinMustache {
 		$urls['specialpages'] = false;
 
 		return $urls;
+	}
+
+	/**
+	 * Returns the javascript entry modules to load. Only modules that need to
+	 * be overriden or added conditionally should be placed here.
+	 * @return array
+	 */
+	public function getDefaultModules() {
+		$modules = parent::getDefaultModules();
+
+		$modules['content'] = array_diff( $modules['content'], [
+			// Citizen provides its own implementation. Loading this will break display.
+			'mediawiki.toc'
+		] );
+
+		return $modules;
+	}
+
+	/**
+	 * Set up optional skin features
+	 *
+	 * @param array &$options
+	 */
+	private function buildSkinFeatures( array &$options ) {
+		$out = $this->getOutput();
+		$title = $out->getTitle();
+
+		$metadata = new Metadata( $this );
+		$skinTheme = new Theme( $this );
+
+		// Add metadata
+		$metadata->addMetadata();
+
+		// Add theme handler
+		$skinTheme->setSkinTheme( $options );
+
+		// Collapsible sections
+		// Load in content pages
+		if ( $title !== null && $title->isContentPage() ) {
+			// Load Citizen collapsible sections modules if enabled
+			if ( $this->getConfigValue( 'CitizenEnableCollapsibleSections' ) === true ) {
+				$options['scripts'][] = 'skins.citizen.scripts.sections';
+				$options['styles'][] = 'skins.citizen.styles.sections';
+				$options['styles'][] = 'skins.citizen.icons.sections';
+			}
+		}
+
+		// Table of content highlight
+		// Load if ToC presents
+		if ( $out->isTOCEnabled() ) {
+			// Add class to body that notifies the page has TOC
+			$out->addBodyClasses( 'skin-citizen-has-toc' );
+			$options['scripts'][] = 'skins.citizen.scripts.toc';
+			$options['styles'][] = 'skins.citizen.styles.toc';
+		}
+
+		// Drawer sitestats
+		if ( $this->getConfigValue( 'CitizenEnableDrawerSiteStats' ) === true ) {
+			$options['styles'][] = 'skins.citizen.styles.sitestats';
+		}
+
+		// Drawer subsearch
+		if ( $this->getConfigValue( 'CitizenEnableDrawerSubSearch' ) === true ) {
+			$options['scripts'][] = 'skins.citizen.scripts.drawer';
+		}
+
+		// Debug styles
+		if (
+			$this->getConfigValue( 'ShowDebug' ) === true
+			|| $this->getConfigValue( 'ShowExceptionDetails' ) === true
+		) {
+			$options['styles'][] = 'skins.citizen.styles.debug';
+		}
 	}
 }

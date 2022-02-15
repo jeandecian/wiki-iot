@@ -6,14 +6,15 @@
 	bottom: 0;
 	left: 0;
 	display: flex;
+	overflow: auto;
 	flex-direction: column;
 	align-items: center;
-	background-color: var( --background-color-overlay );
-	transform: translate3d( 0, -100%, 0 );
+	margin: var( --margin-header-item ) var( --margin-header-item--corner );
+	overscroll-behavior: contain;
+	transform: translate3d( -110%, -110%, 0 );
 	transform-origin: 0 0;
-	transition: @transition-transform-quick;
 	user-select: none;
-	will-change: transform; // help with performance
+	.citizen-card();
 
 	&-checkbox {
 		&:checked {
@@ -42,7 +43,6 @@
 			// Show drawer
 			~ #mw-drawer {
 				transform: none;
-				will-change: unset;
 			}
 		}
 	}
@@ -50,8 +50,9 @@
 	&-button {
 		position: absolute;
 		z-index: 8;
-		width: var( --width-button-corner );
-		height: var( --height-header );
+		margin-right: var( --margin-header-item--corner );
+		// Need to align with page padding
+		margin-left: var( --margin-header-item--corner );
 
 		&-icon {
 			display: flex;
@@ -59,8 +60,11 @@
 			width: var( --size-icon );
 			height: var( --size-icon );
 			flex-direction: column;
-			margin: ~'calc( ( var( --height-header ) - var( --size-icon ) ) / 2 ) var( --padding-page )';
-			place-content: center;
+			flex-shrink: 0;
+			align-items: center;
+			justify-content: center;
+			// Don't use padding as margin is needed to hide overflow
+			margin: ~'calc( var( --padding-header-icon ) + var( --margin-header-item ) )' var( --padding-page );
 
 			&-1 {
 				transform-origin: 0 0;
@@ -98,29 +102,61 @@
 		}
 	}
 
-	&-logo {
-		padding: var( --height-header ) var( --padding-page ) 10px var( --padding-page );
+	&-header {
+		display: flex;
+		width: 100%;
+		box-sizing: border-box;
+		flex-direction: column;
+		align-items: center;
+		padding: ~'calc( var( --padding-page ) + 10px )' var( --padding-page ) 15px var( --padding-page );
 		border-bottom: 1px solid var( --border-color-base );
 	}
 
-	&-menu {
-		display: flex;
-		overflow: auto;
-		max-width: var( --width-layout );
-		flex-wrap: wrap;
-		font-size: @ui-menu-text;
-		overscroll-behavior: contain;
-
-		h3 {
-			font-size: 16px;
+	&-logo {
+		.mw-logo-icon {
+			width: auto;
+			height: 80px;
 		}
+
+		img.mw-logo-wordmark {
+			width: auto;
+			height: 16px;
+		}
+	}
+
+	&-search {
+		margin-top: 10px;
+
+		&-input {
+			width: 200px;
+			padding: 8px;
+			background: var( --color-surface-1 );
+			border-radius: var( --border-radius--small );
+			text-align: center;
+			transition: @transition-background-quick;
+			.boxshadow(1);
+
+			&:focus {
+				outline: 0;
+				.boxshadow(3);
+			}
+		}
+	}
+
+	&-menu {
+		display: grid;
+		max-width: ~'calc( 100vw - var( --padding-page ) * 4 )';
+		padding: ~'calc( var(--padding-page) / 2 ) calc( var(--padding-page) / 2 ) var( --padding-page ) calc( var(--padding-page) / 2 )';
+		font-size: @ui-menu-text;
+		gap: ~'calc( var(--padding-page) / 4 )';
+		grid-template-columns: repeat( auto-fit, 240px );
 
 		a {
 			.menu-item-link;
 			align-items: center;
 			justify-content: space-between;
 			padding: @padding-menu-item-big;
-			border-radius: @border-radius-small;
+			border-radius: var( --border-radius--small );
 
 			&:after {
 				.resource-loader-list-icon;
@@ -147,11 +183,6 @@
 				}
 			}
 		}
-
-		.mw-portal {
-			width: 240px;
-			margin-top: 20px;
-		}
 	}
 }
 
@@ -165,11 +196,25 @@
 				height: 2px;
 				margin: 1.5px 0;
 				background-color: var( --background-color-icon );
-				border-radius: @border-radius-large;
+				border-radius: var( --border-radius--large );
 				transform-origin: 4px 0;
 				transition: @transition-transform-quick, @transition-background-quick, @transition-opacity-quick;
 			}
 		}
+	}
+}
+
+.client-nojs {
+	#mw-drawer-search {
+		// Hide search when client has no JS
+		// Since the function does not work without script
+		display: none;
+	}
+}
+
+.citizen-animations-ready {
+	#mw-drawer {
+		transition: @transition-transform-quick;
 	}
 }
 
@@ -179,8 +224,27 @@
 	}
 }
 
+// RTL
+.rtl {
+	#mw-drawer-button:hover {
+		~ #mw-drawer-button-icon {
+			#mw-drawer-button-icon-1 {
+				transform: translate3d( 50%, 0, 0 );
+			}
+		}
+	}
+}
+
+@media ( min-width: @width-breakpoint-tablet ) {
+	#mw-drawer {
+		right: unset;
+		bottom: unset;
+		max-height: ~'calc(100vh - var(--margin-header-item) * 2 )';
+	}
+}
+
 @media ( min-width: @width-breakpoint-desktop-wide ) {
 	#mw-drawer-menu {
-		max-width: 1300px; // 240px * 5
+		max-width: 1200px;
 	}
 }

@@ -1,36 +1,29 @@
 /*
- * Citizen - ULS Styles
- * https://starcitizen.tools
+ * Citizen
+ *
+ * SkinStyles for Extension:UniversalLanguageSelector
+ * Module: ext.uls.common
+ * Version: MLEB 2021.07
+ *
+ * Date: 2021-07-29
 */
 
-@import '../../../resources/variables.less';
-@import '../../../resources/mixins.less';
+@import 'ext.uls.mixins.less';
 
-// Need important to override
-.uls-menu {
-	border: 0 !important;
-	border-radius: 0;
-	.boxshadow(5)!important;
+.uls-menu.callout {
+	.caret();
 }
 
-.uls-search {
-	position: relative;
-	z-index: 1;
-	border: 0;
-	transition: @transition-box-shadow;
-	.boxshadow(2);
+.uls-icon-back {
+	border-right-color: var( --border-color-base );
+}
 
-	&:focus-within {
-		.boxshadow(3);
+.uls-menu .uls-no-results-view {
+	.uls-no-found-more {
+		background-color: var( --color-surface-1 );
 	}
-}
 
-// Gotta fix this for mobile
-.uls-narrow {
-	left: 0 !important;
-	width: 100% !important;
-}
-
-#uls-settings-block {
-	border-color: @base-80 !important;
+	h3 {
+		color: var( --color-base--subtle );
+	}
 }

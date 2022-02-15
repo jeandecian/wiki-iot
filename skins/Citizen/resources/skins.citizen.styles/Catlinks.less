@@ -1,16 +1,27 @@
 .catlinks {
-	padding-top: 2.4rem;
+	margin-top: @content-margin-top * 2;
+	clear: both;
 	line-height: 1.2;
 
 	.mw-normal-catlinks {
 		font-size: 0; // Hide colon
+	}
+
+	.mw-hidden-catlinks {
+		color: var( --color-base--subtle );
+		font-size: @ui-menu-text;
+		letter-spacing: 0.75px;
+	}
+
+	.mw-normal-catlinks,
+	.mw-hidden-catlinks {
+		margin-top: @content-margin-top;
 
 		> a {
 			display: block;
-			color: @color-content-caption;
-			font-size: @content-caption-size;
-			letter-spacing: 1px;
-			text-transform: uppercase;
+			color: var( --color-base--subtle );
+			font-size: @ui-menu-text;
+			letter-spacing: 0.75px;
 		}
 
 		> ul {
@@ -18,41 +29,45 @@
 			flex-wrap: wrap;
 			padding-top: @content-margin-top;
 			margin: 0;
-			font-size: @content-caption-size; // Reset font
+			/* Reset font */
+			font-size: @content-caption-size;
+			letter-spacing: 0;
 
 			li {
 				display: block;
+				overflow: hidden;
 				padding: 0;
 				border: 0;
+				border: 1px solid var( --border-color-base--lighter );
 				margin: 0 @margin-side / 2 @margin-side / 2 0;
+				background-color: var( --background-color-framed );
+				border-radius: 100px;
+				.boxshadow(1);
 
 				&:first-of-type {
 					margin-left: 0;
 				}
 
 				a {
-					display: block;
-					padding: @margin-side / 4 @margin-side / 2;
-					border: 1px solid var( --border-color-base--lighter );
-					background-color: var( --background-color-framed );
+					display: inline-block;
+					padding: 7px 15px;
 					color: var( --color-base--subtle ) !important; // Override
-					transition: @transition-background-quick, @transition-color-quick, @transition-border-quick, @transition-transform-quick, @transition-box-shadow-quick;
-					.boxshadow(1);
+					transition: @transition-background-quick;
 
 					&:hover {
-						border-color: var( --color-primary--hover );
 						background-color: var( --color-primary--hover );
 						color: @base-100 !important;
-						transform: translateY( -2px );
-						.boxshadow(2);
 					}
 
 					&.new:hover {
-						border-color: var( --color-destructive--hover );
 						background-color: var( --color-destructive--hover );
 					}
 				}
 			}
 		}
+	}
+
+	.mw-hidden-cats-hidden {
+		display: none;
 	}
 }

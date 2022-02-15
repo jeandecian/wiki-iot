@@ -33,6 +33,72 @@
 @width-breakpoint-desktop-extrawide: 2000px;
 
 /* == Colors == */
+/* Base theme */
+@diff-hoverstate: 2;
+
+@color-primary__h: 220;
+@color-primary__s: 60%;
+@color-primary__l: 50%;
+
+@color-surface-0: ~'hsl( 0, 0%, 100% )';
+@color-surface-1: ~'hsl( 0, 0%, 100% )';
+@color-surface-2: ~'hsl( 210, 17%, 98% )';
+@color-surface-3: ~'hsl( 220, 17%, 93% )';
+@color-surface-4: ~'hsl( 213, 9%, 80% )';
+
+@color-surface-2--hover: ~'hsl( 210, 17%, 'unit( 98 + @diff-hoverstate, % )~' )';
+@color-surface-2--active: ~'hsl( 210, 17%, 'unit( 98 - @diff-hoverstate, % )~' )';
+
+/*
+ * Syntax highlight colors
+ * Based on Material Theme Lighter
+ * https://material-theme.site
+*/
+@color-syntax-red: #e53935;
+@color-syntax-orange: #f76d47;
+@color-syntax-yellow: #e2931d;
+@color-syntax-green: #91b859;
+@color-syntax-cyan: #39adb5;
+@color-syntax-blue: #6182b8;
+@color-syntax-paleblue: #8796b0;
+@color-syntax-purple: #9c3eda;
+@color-syntax-brown: #916b53;
+@color-syntax-pink: #ff5370;
+@color-syntax-violet: #945eb8;
+@color-syntax-grey: #90a4ae;
+
+/* Dark theme */
+@diff-hoverstate-dark: 4;
+
+@color-primary__l-dark: 60%;
+
+@color-surface-0-dark: ~'hsl( 210, 27%, 10% )';
+@color-surface-1-dark: ~'hsl( 212, 15%, 17% )';
+@color-surface-2-dark: ~'hsl( 208, 14%, 18% )';
+@color-surface-3-dark: ~'hsl( 210, 11%, 21% )';
+@color-surface-4-dark: ~'hsl( 210, 10%, 24% )';
+
+@color-surface-2-dark--hover: ~'hsl( 208, 14%, 'unit( 18 + @diff-hoverstate-dark, % )~' )';
+@color-surface-2-dark--active: ~'hsl( 208, 14%, 'unit( 18 - @diff-hoverstate-dark, % )~' )';
+
+/*
+ * Syntax highlight colors
+ * Based on Material Theme Palenight
+ * https://material-theme.site
+*/
+@color-syntax-red-dark: #f07178;
+@color-syntax-orange-dark: #f78c6c;
+@color-syntax-yellow-dark: #ffcb6b;
+@color-syntax-green-dark: #c3e88d;
+@color-syntax-cyan-dark: #89ddff;
+@color-syntax-blue-dark: #82aaff;
+@color-syntax-paleblue-dark: #b2ccd6;
+@color-syntax-purple-dark: #c792ea;
+@color-syntax-brown-dark: #916b53;
+@color-syntax-pink-dark: #ff9cac;
+@color-syntax-violet-dark: #bb80b3;
+@color-syntax-grey-dark: #676E95;
+
 /**
  * Based WikimediaUI (`wmui`) color palette
  * See https://design.wikimedia.org/style-guide/visual-style_colors.html
@@ -71,8 +137,9 @@
 
 @color-accent-30--darken: #26437f;
 
-/* Background Colors */
+/* Background colors */
 @background-color-dp-00:			@color-base100;
+@background-color-dp-00--rgb:		red(@background-color-dp-00), green(@background-color-dp-00), blue(@background-color-dp-00);
 @background-color-dp-01:			@color-base100;
 @background-color-dp-02:			@color-base100;
 @background-color-dp-03:			@color-base100;
@@ -84,6 +151,7 @@
 @background-color-dp-24:			@color-base100;
 
 @background-color-overlay:			rgba( 255, 255, 255, 0.95 ); //base100 95% opacity
+@background-color-overlay--lighter:	rgba( 255, 255, 255, 0.6 );
 
 @background-color-framed:			@color-base90;
 @background-color-framed--hover:	@color-base100;
@@ -91,12 +159,12 @@
 
 @background-color-input: 			rgba( 255, 255, 255, 0.5 );
 
-@background-color-icon:				rgba( 0, 0, 0, 0.4 );
-@background-color-icon--hover:		rgba( 0, 0, 0, 0.6 );
-@background-color-icon--active:		rgba( 0, 0, 0, 0.8 );
+@background-color-icon:				rgba( 0, 0, 0, 0.6 );
+@background-color-icon--hover:		rgba( 0, 0, 0, 0.8 );
+@background-color-icon--active:		rgba( 0, 0, 0, 1 );
 @background-color-quiet: 			transparent;
-@background-color-quiet--hover:		rgba( 0, 0, 0, 0.03 );
-@background-color-quiet--active:	rgba( 0, 0, 0, 0.05 );
+@background-color-quiet--hover:		rgba( 0, 0, 0, 0.07 );
+@background-color-quiet--active:	rgba( 0, 0, 0, 0.09 );
 
 @background-color-primary--hover:	@color-accent90;
 @background-color-primary--active:	rgba( 41, 98, 204, 0.1 );
@@ -104,7 +172,7 @@
 @background-color-warning:			@color-yellow90;
 @background-color-success:			@color-green90;
 
-/* Foreground Colors */
+/* Foreground colors */
 @color-base:				@color-base20;
 @color-base--emphasized:	@color-base10;
 @color-base--subtle:		@color-base30;
@@ -120,15 +188,23 @@
 @color-warning:				@color-yellow50;
 @color-success:				@color-green50;
 
-/* Opacity */
-@opacity-base--disabled:	0.2;
-@opacity-icon-base:			0.4;
-@opacity-icon-base--hover:	0.6;
-@opacity-icon-base--active:	0.8;
+@color-link:				@color-accent50;
+@color-link--hover:			@color-accent50--lighten;
+@color-link--active:		@color-accent30;
+@color-link-new:			@color-red50;
+@color-link-new--hover:		@color-red50--lighten;
+@color-link-new--active:	@color-red30;
 
-/* == Box Model properties == */
+/* Opacity */
+@opacity-base--disabled:	0.3;
+@opacity-icon-base:			0.6;
+@opacity-icon-base--hover:	0.8;
+@opacity-icon-base--active:	1;
+
+/* == Box model properties == */
 /* `--*size` variables are used for `*width` & `*height` properties. */
 @size-icon:		20px;
+// Not in the header section it is also used outside of header
 @height-header:	56px;
 @width-layout:	@width-breakpoint-desktop - 2 * @padding-page;
 @width-toc: @width-breakpoint-desktop-wide - @width-breakpoint-desktop;
@@ -136,8 +212,10 @@
 /* Paddings */
 @padding-page:	20px;
 
+@line-height: 1.6;
+
 /* Border */
-/* Border Colors */
+/* Border colors */
 @border-color-base:				rgba( 0, 0, 0, 0.05 );
 @border-color-base--lighter:	rgba( 0, 0, 0, 0.02 );
 @border-color-base--darker:		rgba( 0, 0, 0, 0.08 );
@@ -145,204 +223,38 @@
 @border-color-input:			@border-color-base;
 @border-color-input--hover:		rgba( 0, 0, 0, 0.4 );
 
-/**
- * Dark theme color palette
- * Background color is used instead of shadow to show elevation
- * and hierarchy in dark theme
- * See https://material.io/design/color/dark-theme.html#properties
- */
-@dark-color-base0:	#131a21;	// Surface color
-@dark-color-base10: #1f262c; 	// 5% white overlay
-@dark-color-base20: #242a31;	// 7% white overlay
-@dark-color-base30: #262c32;	// 8% white overlay
-@dark-color-base40: #282f35;	// 9% white overlay
-@dark-color-base50: #2d3339;	// 11% white overlay
-@dark-color-base60: #30363c;	// 12% white overlay
-@dark-color-base70: #343a40;	// 14% white overlay
-@dark-color-base80: #363c42;	// 15% white overlay
-@dark-color-base90: #393f45;	// 16% white overlay
+/* Border radius */
+@border-radius--small: 4px;
+@border-radius--medium: @border-radius--small * 2;
+@border-radius--large: @border-radius--small * 3;
 
-/* Background Colors */
-@dark-background-color-dp-00:			@dark-color-base0;
-@dark-background-color-dp-01:			@dark-color-base10;
-@dark-background-color-dp-02:			@dark-color-base20;
-@dark-background-color-dp-03:			@dark-color-base30;
-@dark-background-color-dp-04:			@dark-color-base40;
-@dark-background-color-dp-06:			@dark-color-base50;
-@dark-background-color-dp-08:			@dark-color-base60;
-@dark-background-color-dp-12:			@dark-color-base70;
-@dark-background-color-dp-16:			@dark-color-base80;
-@dark-background-color-dp-24:			@dark-color-base90;
+/* Transitions */
+@transition-color: color 500ms ease;
+@transition-color-quick: color 200ms ease;
+@transition-transform: transform 500ms cubic-bezier(0.77, 0.2, 0.05, 1);
+@transition-transform-quick: transform 200ms cubic-bezier(0.77, 0.2, 0.05, 1);
+@transition-width: width 500ms cubic-bezier(0.77, 0.2, 0.05, 1);
+@transition-width-quick: width 200ms cubic-bezier(0.77, 0.2, 0.05, 1);
+@transition-height: height 500ms cubic-bezier(0.77, 0.2, 0.05, 1);
+@transition-height-quick: height 200ms cubic-bezier(0.77, 0.2, 0.05, 1);
+@transition-margin: margin 500ms cubic-bezier(0.77, 0.2, 0.05, 1);
+@transition-margin-quick: margin 200ms cubic-bezier(0.77, 0.2, 0.05, 1);
+@transition-padding: padding 500ms cubic-bezier(0.77, 0.2, 0.05, 1);
+@transition-padding-quick: padding 200ms cubic-bezier(0.77, 0.2, 0.05, 1);
+@transition-background: background 500ms ease;
+@transition-background-quick: background 200ms ease;
+@transition-opacity: opacity 500ms ease;
+@transition-opacity-quick: opacity 200ms ease;
+@transition-border: border 500ms ease;
+@transition-border-quick: border 200ms ease;
+@transition-box-shadow: box-shadow 500ms ease;
+@transition-box-shadow-quick: box-shadow 200ms ease;
+@transition-border-color: border-color 500ms ease;
+@transition-border-color-quick: border-color 200ms ease;
+@transition-filter: filter 500ms ease;
+@transition-filter-quick: filter 200ms ease;
 
-@dark-background-color-overlay:				rgba( 19, 26, 33, 0.95 ); //base0 95% opacity
-
-@dark-background-color-framed:			@dark-color-base10;
-@dark-background-color-framed--hover:	@dark-color-base30;
-@dark-background-color-framed--active:	@dark-color-base0;
-
-@dark-background-color-input: 			rgba( 0, 0, 0, 0.5 );
-
-@dark-background-color-icon:			rgba( 255, 255, 255, 0.4 );
-@dark-background-color-icon--hover:		rgba( 255, 255, 255, 0.6 );
-@dark-background-color-icon--active:	rgba( 255, 255, 255, 0.2 );
-// @dark-background-color-quiet: 			transparent;
-@dark-background-color-quiet--hover:	rgba( 255, 255, 255, 0.03 );
-@dark-background-color-quiet--active:	rgba( 255, 255, 255, 0.05 );
-
-@dark-background-color-primary--hover:	@color-accent30;
-@dark-background-color-primary--active:	@color-accent-30--darken;
-
-@dark-background-color-destructive:	@color-red30;
-@dark-background-color-warning:		@color-yellow30;
-@dark-background-color-success:		@color-green30;
-
-/* Foreground Colors */
-@dark-color-base:				rgba( 255, 255, 255, 0.6 );
-@dark-color-base--emphasized:	rgba( 255, 255, 255, 0.87 );
-@dark-color-base--subtle:		rgba( 255, 255, 255, 0.38 );
-
-/* Opacity */
-// @dark-opacity-icon-base:			0.4;
-// @dark-opacity-icon-base--hover:		0.6;
-@dark-opacity-icon-base--active:	0.2;
-
-/* Border Colors */
-@dark-border-color-base:			rgba( 255, 255, 255, 0.05 );
-@dark-border-color-base--lighter:	rgba( 255, 255, 255, 0.02 );
-@dark-border-color-base--darker:	rgba( 255, 255, 255, 0.08 );
-@dark-border-color-input:			@dark-border-color-base;
-@dark-border-color-input--hover:	rgba( 255, 255, 255, 0.5 );
-
-/* Technical debt below */
-/*
- * Framework
-*/
-@html-font-size: 100%;
-@margin-side: 20px;
-@page-width: 860px;
-@footer-width: 1290px;
-@icon-size: 18px;
-@icon-box-size: @icon-size + @icon-margin * 2;
-@icon-margin: 3px;
-@icon-padding: 15px;
-@header-height: 56px;
-@sidebar-sitename-height: 69px;
-@drawer-width: 300px;
-@padding-menu-item: 10px 15px;
-@padding-menu-item-big: 10px 20px;
-@negative-margin: (@footer-width - @page-width) / -2;
-
-@search-bar-width: 500px;
-@search-bar-height: 42px;
-@search-loader-progress-bar-height: 2px;
-
-@border-radius-small: 4px;
-@border-radius-medium: @border-radius-small * 2;
-@border-radius-large: @border-radius-small * 3;
-
-/*
- * Colors
-*/
-
-// Wikimedia colors
-@base-0: #000;
-@base-10: #202122;
-@base-20: #54595d;
-@base-30: #72777d;
-@base-50: #a2a9b1;
-@base-70: #c8ccd1;
-@base-80: #eaecf0;
-@base-90: #f8f9fa;
-@base-100: #fff;
-
-@accent-10: #2a4b8d;
-@accent-50: #36c;
-@accent-90: #eaf3ff;
-
-@red-30: #b32424;
-@red-50: #d33;
-@red-90: #fee7e6;
-
-@green-30: #14866d;
-@green-50: #00af89;
-@green-90: #d5fdf4;
-
-@yellow-30: #ac6600;
-@yellow-50: #fc3;
-@yellow-90: #fef6e7;
-
-@menu-background: @base-100;
-@opacity-icon: 0.3;
-@opacity-icon-active: 0.5;
-@color-item-text: @base-30;
-@color-item-text-hover: @base-20;
-@color-item-text-active: @accent-50;
-@color-item-header: @base-10;
-@menu-item-link-hover: @base-80;
-@menu-item-link-active: @accent-90;
-
-@color-content-text: @base-20;
-@color-content-header: @base-10;
-@color-content-caption: @base-30;
-
-// Citizen colors
-@header-background-color-light: @base-100;
-@header-background-color-dark: @dark-bg-0;
-
-@color-footer-background-40: #0f1418;
-@color-footer-background-50: #131a21;
-@color-footer-background-60: #1a252d;
-@color-footer-text: #979c9f;
-@color-footer-link: #cfdee8;
-@color-footer-link-active: @base-80;
-
-// Dark mode colors
-@dark-bg-0: #11151d;
-@dark-bg-10: #1d2129;
-@dark-bg-20: #22262d;
-@dark-bg-30: #24272f;
-@dark-bg-40: #2b2f36;
-@dark-bg-50: #33363d;
-@dark-bg-60: #34383f;
-
-@dark-text-100: #e0e1e2;
-@dark-text-90: #c1c2c5;
-@dark-text-80: #a0a1a5;
-@dark-text-70: #86888c;
-@dark-text-60: #6c6e73;
-
-/*
- * Transitions
-*/
-@transition-color: color 0.55s ease;
-@transition-color-quick: color 0.2s ease;
-@transition-transform: transform 0.5s cubic-bezier(0.77, 0.2, 0.05, 1);
-@transition-transform-quick: transform 0.2s cubic-bezier(0.77, 0.2, 0.05, 1);
-@transition-width: width 0.5s cubic-bezier(0.77, 0.2, 0.05, 1);
-@transition-width-quick: width 0.2s cubic-bezier(0.77, 0.2, 0.05, 1);
-@transition-height: height 0.5s cubic-bezier(0.77, 0.2, 0.05, 1);
-@transition-height-quick: height 0.2s cubic-bezier(0.77, 0.2, 0.05, 1);
-@transition-margin: margin 0.5s cubic-bezier(0.77, 0.2, 0.05, 1);
-@transition-margin-quick: margin 0.2s cubic-bezier(0.77, 0.2, 0.05, 1);
-@transition-padding: padding 0.5s cubic-bezier(0.77, 0.2, 0.05, 1);
-@transition-padding-quick: padding 0.2s cubic-bezier(0.77, 0.2, 0.05, 1);
-@transition-background: background 0.55s ease;
-@transition-background-quick: background 0.2s ease;
-@transition-opacity: opacity 0.55s ease;
-@transition-opacity-quick: opacity 0.2s ease;
-@transition-border: border 0.55s ease;
-@transition-border-quick: border 0.2s ease;
-@transition-box-shadow: box-shadow 0.55s ease;
-@transition-box-shadow-quick: box-shadow 0.2s ease;
-@transition-border-color: border-color 0.55s ease;
-@transition-border-color-quick: border-color 0.2s ease;
-@transition-filter: filter 0.55s ease;
-@transition-filter-quick: filter 0.2s ease;
-
-/*
- * Fonts
-*/
-
+/* Fonts */
 /**
  * Citizen font stack for sans-serif fonts
  *
@@ -370,10 +282,107 @@
  */
 @fonts-monospace: 'SFMono-Regular', 'Menlo', 'Roboto Mono', 'Consolas', 'Liberation Mono', 'Courier New', monospace;
 
+/**
+ * Dark theme color palette
+ * Background color is used instead of shadow to show elevation
+ * and hierarchy in dark theme
+ * See https://material.io/design/color/dark-theme.html#properties
+ */
+@dark-color-base0:	#131a21;	// Surface color
+@dark-color-base10: #1f262c; 	// 5% white overlay
+@dark-color-base20: #242a31;	// 7% white overlay
+@dark-color-base30: #262c32;	// 8% white overlay
+@dark-color-base40: #282f35;	// 9% white overlay
+@dark-color-base50: #2d3339;	// 11% white overlay
+@dark-color-base60: #30363c;	// 12% white overlay
+@dark-color-base70: #343a40;	// 14% white overlay
+@dark-color-base80: #363c42;	// 15% white overlay
+@dark-color-base90: #393f45;	// 16% white overlay
+
+/* Background colors */
+@dark-background-color-dp-00:			@dark-color-base0;
+@dark-background-color-dp-00--rgb:		red(@dark-background-color-dp-00), green(@dark-background-color-dp-00), blue(@dark-background-color-dp-00);
+@dark-background-color-dp-01:			@dark-color-base10;
+@dark-background-color-dp-02:			@dark-color-base20;
+@dark-background-color-dp-03:			@dark-color-base30;
+@dark-background-color-dp-04:			@dark-color-base40;
+@dark-background-color-dp-06:			@dark-color-base50;
+@dark-background-color-dp-08:			@dark-color-base60;
+@dark-background-color-dp-12:			@dark-color-base70;
+@dark-background-color-dp-16:			@dark-color-base80;
+@dark-background-color-dp-24:			@dark-color-base90;
+
+@dark-background-color-overlay:				rgba( 19, 26, 33, 0.95 );
+@dark-background-color-overlay--lighter:	rgba( 19, 26, 33, 0.6 );
+
+@dark-background-color-framed:			@dark-color-base10;
+@dark-background-color-framed--hover:	@dark-color-base30;
+@dark-background-color-framed--active:	@dark-color-base0;
+
+@dark-background-color-input: 			rgba( 0, 0, 0, 0.5 );
+
+@dark-background-color-icon:			rgba( 255, 255, 255, 0.6 );
+@dark-background-color-icon--hover:		rgba( 255, 255, 255, 0.8 );
+@dark-background-color-icon--active:	rgba( 255, 255, 255, 0.4 );
+// @dark-background-color-quiet: 			transparent;
+@dark-background-color-quiet--hover:	rgba( 255, 255, 255, 0.07 );
+@dark-background-color-quiet--active:	rgba( 255, 255, 255, 0.03 );
+
+@dark-background-color-primary--hover:	@color-accent30;
+@dark-background-color-primary--active:	@color-accent-30--darken;
+
+@dark-background-color-destructive:	@color-red30;
+@dark-background-color-warning:		@color-yellow30;
+@dark-background-color-success:		@color-green30;
+
+/* Foreground colors */
+@dark-color-base:				rgba( 255, 255, 255, 0.6 );
+@dark-color-base--emphasized:	rgba( 255, 255, 255, 0.87 );
+@dark-color-base--subtle:		rgba( 255, 255, 255, 0.38 );
+
+@dark-color-link:				@color-accent50--lighten;
+@dark-color-link--hover:		@color-accent90;
+@dark-color-link--active:		@color-accent30;
+@dark-color-link-new:			@color-red50--lighten;
+@dark-color-link-new--hover:	@color-red90;
+@dark-color-link-new--active:	@color-red30;
+
+/* Opacity */
+// @dark-opacity-icon-base:			0.4;
+// @dark-opacity-icon-base--hover:		0.6;
+@dark-opacity-icon-base--active:	0.4;
+
+/* Border colors */
+@dark-border-color-base:			rgba( 255, 255, 255, 0.05 );
+@dark-border-color-base--lighter:	rgba( 255, 255, 255, 0.02 );
+@dark-border-color-base--darker:	rgba( 255, 255, 255, 0.08 );
+@dark-border-color-input:			@dark-border-color-base;
+@dark-border-color-input--hover:	rgba( 255, 255, 255, 0.5 );
+
+/*
+ * Framework
+*/
+@html-font-size: 100%;
+@margin-side: 20px;
+@footer-width: 1290px;
+@icon-size: 18px;
+@icon-box-size: @icon-size + @icon-margin * 2;
+@icon-margin: 3px;
+@icon-padding: 15px;
+@padding-menu-item: 10px 15px;
+@padding-menu-item-big: 10px 20px;
+@height-progress-bar: 2px;
+
+/* Heade */
+@margin-header-item: 8px;
+
+/* Search bar */
+@width-search-bar: 500px;
+@height-search-bar: 42px;
+
 /*
  * Text hierarchy
 */
-
 // Scaling for content text
 @content-scaling: 0.625;
 @toc-scaling: 0.75;
@@ -392,7 +401,6 @@
 @content-caption-size: 1.3rem * @content-scaling;
 @content-small-text-size: 1.3rem * @content-scaling;
 @content-monospace-size: 1.4rem * @content-scaling;
-@content-line-height: 1.6;
 @content-margin-top: 0.8rem;
 
 @ui-menu-text: 14px;
@@ -402,11 +410,54 @@
 @footer-line-height: 1.4;
 
 /*
- * Viewports
- */
+ * Legacy colors
+ * TODO: Replace all of them with the new variables
+*/
+// Wikimedia colors
+@base-0: #000;
+@base-10: #202122;
+@base-20: #54595d;
+@base-30: #72777d;
+@base-50: #a2a9b1;
+@base-70: #c8ccd1;
+@base-80: #eaecf0;
+@base-90: #f8f9fa;
+@base-100: #fff;
 
-@screen0: @page-width - @margin-side * 7; // 720px
-@screen1: @page-width + @margin-side * 2; // 900px
-@screen2: @footer-width; // 1290px
-@screen3: @footer-width + @margin-side * 8; // 1450px
-@screen4: @footer-width - (@negative-margin * 2); // 1720px
+@accent-10: #2a4b8d;
+@accent-50: #36c;
+@accent-90: #eaf3ff;
+
+@red-30: #b32424;
+@red-50: #d33;
+@red-90: #fee7e6;
+
+@green-30: #14866d;
+@green-50: #00af89;
+@green-90: #d5fdf4;
+
+@yellow-30: #ac6600;
+@yellow-50: #fc3;
+@yellow-90: #fef6e7;
+
+@color-footer-background-40: #0f1418;
+@color-footer-background-50: #131a21;
+@color-footer-background-60: #1a252d;
+@color-footer-text: #979c9f;
+@color-footer-link: #cfdee8;
+@color-footer-link-active: @base-80;
+
+// Dark mode colors
+@dark-bg-0: #11151d;
+@dark-bg-10: #1d2129;
+@dark-bg-20: #22262d;
+@dark-bg-30: #24272f;
+@dark-bg-40: #2b2f36;
+@dark-bg-50: #33363d;
+@dark-bg-60: #34383f;
+
+@dark-text-100: #e0e1e2;
+@dark-text-90: #c1c2c5;
+@dark-text-80: #a0a1a5;
+@dark-text-70: #86888c;
+@dark-text-60: #6c6e73;

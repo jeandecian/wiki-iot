@@ -25,7 +25,6 @@ declare( strict_types=1 );
 
 namespace Citizen\Partials;
 
-use Linker;
 use MediaWiki\MediaWikiServices;
 use MWException;
 use Skin;
@@ -38,7 +37,6 @@ use Title;
  * - Personal Menu
  * - Extra Tools
  * - Search
- * - Theme Toggle
  */
 final class Header extends Partial {
 
@@ -51,20 +49,18 @@ final class Header extends Partial {
 		$personalTools = $this->skin->getPersonalToolsForMakeListItem(
 			$this->skin->buildPersonalUrlsPublic()
 		);
+		$user = $this->skin->getUser();
 
-		// Move the Echo badges and ULS out of default list
+		// Move the Echo badges out of default list
 		if ( isset( $personalTools['notifications-alert'] ) ) {
 			unset( $personalTools['notifications-alert'] );
 		}
 		if ( isset( $personalTools['notifications-notice'] ) ) {
 			unset( $personalTools['notifications-notice'] );
 		}
-		if ( isset( $personalTools['uls'] ) ) {
-			unset( $personalTools['uls'] );
-		}
 
-		if ( $this->skin->getUser()->isLoggedIn() ) {
-			$personalTools = $this->addUserGroupsToMenu( $personalTools );
+		if ( $user->isRegistered() ) {
+			$personalTools = $this->addUserInfoToMenu( $personalTools, $user );
 		}
 
 		$personalMenu = $this->skin->getMenuData( 'personal', $personalTools );
@@ -78,7 +74,7 @@ final class Header extends Partial {
 	}
 
 	/**
-	 * Echo notification badges and ULS button
+	 * Echo notification badges button
 	 *
 	 * @return array
 	 */
@@ -87,16 +83,13 @@ final class Header extends Partial {
 			$this->skin->buildPersonalUrlsPublic()
 		);
 
-		// Create the Echo badges and ULS
+		// Create the Echo badges
 		$extraTools = [];
 		if ( isset( $personalTools['notifications-alert'] ) ) {
 			$extraTools['notifications-alert'] = $personalTools['notifications-alert'];
 		}
 		if ( isset( $personalTools['notifications-notice'] ) ) {
 			$extraTools['notifications-notice'] = $personalTools['notifications-notice'];
-		}
-		if ( isset( $personalTools['uls'] ) ) {
-			$extraTools['uls'] = $personalTools['uls'];
 		}
 
 		$html = $this->skin->getMenuData( 'personal-extra', $extraTools );
@@ -113,13 +106,12 @@ final class Header extends Partial {
 	 * @return array
 	 * @throws MWException
 	 */
-	public function buildSearchProps() : array {
+	public function buildSearchProps(): array {
 		$toggleMsg = $this->skin->msg( 'citizen-search-toggle' )->text();
-		$accessKey = Linker::accesskey( 'search' );
 
 		return [
 			'msg-citizen-search-toggle' => $toggleMsg,
-			'msg-citizen-search-toggle-shortcut' => $toggleMsg . ' [alt-shift-' . $accessKey . ']',
+			'msg-citizen-search-toggle-shortcut' => $toggleMsg . ' [/]',
 			'form-action' => $this->getConfigValue( 'Script' ),
 			'html-input' => $this->skin->makeSearchInput( [ 'id' => 'searchInput' ] ),
 			'msg-search' => $this->skin->msg( 'search' ),
@@ -130,66 +122,66 @@ final class Header extends Partial {
 	}
 
 	/**
-	 * Render the theme toggle
-	 *
-	 * @return array
-	 */
-	public function buildThemeToggleProps() : array {
-		$toggleMsg = $this->skin->msg( 'citizen-theme-toggle' )->text();
-
-		return [
-			'msg-citizen-theme-toggle-shortcut' => $toggleMsg,
-		];
-	}
-
-	/**
-	 * This adds all explicit user groups as links to the personal menu
+	 * Adds user info to the personal menu
+	 * Adds all explicit user groups as links to the personal menu
 	 * Links are added right below the user page link
 	 * Wrapped in an <li> element with id 'pt-usergroups'
 	 *
 	 * @param array $originalUrls The original personal tools urls
+	 * @param User $user
 	 *
 	 * @return array
 	 */
-	private function addUserGroupsToMenu( $originalUrls ) {
+	private function addUserInfoToMenu( $originalUrls, $user ) {
 		$personalTools = [];
 
 		// This does not return implicit groups
-		$groups = MediaWikiServices::getInstance()->getUserGroupManager()->getUserGroups( $this->skin->getUser() );
+		$groups = MediaWikiServices::getInstance()->getUserGroupManager()->getUserGroups( $user );
 
-		// If the user has only implicit groups return early
-		if ( empty( $groups ) ) {
-			return $originalUrls;
-		}
+		// Return user edits
+		$edits = MediaWikiServices::getInstance()->getUserEditTracker()->getUserEditCount( $user );
 
-		$userPage = array_shift( $originalUrls );
-		$groupLinks = [];
-		$msgName = 'group-%s';
+		// Add user group
+		if ( !empty( $groups ) ) {
+			$userPage = array_shift( $originalUrls );
+			$groupLinks = [];
+			$msgName = 'group-%s';
 
-		foreach ( $groups as $group ) {
-			$groupPage = Title::newFromText(
-				$this->skin->msg( sprintf( $msgName, $group ) )->text(),
-				NS_PROJECT
-			);
+			foreach ( $groups as $group ) {
+				$groupPage = Title::newFromText(
+					$this->skin->msg( sprintf( $msgName, $group ) )->text(),
+					NS_PROJECT
+				);
 
-			$groupLinks[$group] = [
-				'msg' => sprintf( $msgName, $group ),
-				// Nullpointer should not happen
-				'href' => $groupPage->getLinkURL(),
-				'tooltiponly' => true,
-				'id' => sprintf( $msgName, $group ),
-				// 'exists' => $groupPage->exists() - This will add an additional DB call
+				$groupLinks[$group] = [
+					'msg' => sprintf( $msgName, $group ),
+					// Nullpointer should not happen
+					'href' => $groupPage->getLinkURL(),
+					'tooltiponly' => true,
+					'id' => sprintf( $msgName, $group ),
+					// 'exists' => $groupPage->exists() - This will add an additional DB call
+				];
+			}
+
+			$userGroups = [
+				'id' => 'pt-usergroups',
+				'links' => $groupLinks
 			];
 		}
 
-		$userGroups = [
-			'id' => 'pt-usergroups',
-			'links' => $groupLinks
+		$userContris = [
+			'text' => $this->skin->msg( 'usereditcount' )->numParams( sprintf( '%s', number_format( $edits, 0 ) ) ),
+			'id' => 'pt-usercontris'
 		];
 
 		// The following defines the order of links added
-		$personalTools['userpage'] = $userPage;
-		$personalTools['usergroups'] = $userGroups;
+		if ( isset( $userPage ) ) {
+			$personalTools['userpage'] = $userPage;
+		}
+		if ( isset( $userGroups ) ) {
+			$personalTools['usergroups'] = $userGroups;
+		}
+		$personalTools['usercontris'] = $userContris;
 
 		foreach ( $originalUrls as $key => $url ) {
 			$personalTools[$key] = $url;

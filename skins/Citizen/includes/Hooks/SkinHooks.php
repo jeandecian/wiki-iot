@@ -25,13 +25,16 @@ declare( strict_types=1 );
 
 namespace Citizen\Hooks;
 
+use MediaWiki\Hook\BeforePageDisplayHook;
 use MediaWiki\Skins\Hook\SkinPageReadyConfigHook;
+use OutputPage;
 use ResourceLoaderContext;
+use Skin;
 
 /**
  * Hooks to run relating the skin
  */
-class SkinHooks implements SkinPageReadyConfigHook {
+class SkinHooks implements SkinPageReadyConfigHook, BeforePageDisplayHook {
 
 	/**
 	 * SkinPageReadyConfig hook handler
@@ -51,5 +54,30 @@ class SkinHooks implements SkinPageReadyConfigHook {
 
 		// Tell the `mediawiki.page.ready` module not to wire up search.
 		$config['search'] = false;
+	}
+
+	/**
+	 * Adds the inline theme switcher script to the page
+	 *
+	 * @param OutputPage $out
+	 * @param Skin $skin
+	 */
+	public function onBeforePageDisplay( $out, $skin ): void {
+		// It's better to exit before any additional check
+		if ( $skin->getSkinName() !== 'citizen' ) {
+			return;
+		}
+
+		$nonce = $out->getCSP()->getNonce();
+
+		// Script content at 'skins.citizen.scripts.theme/inline.js
+		// @phpcs:ignore Generic.Files.LineLength.TooLong
+		$script = sprintf(
+			'<script%s>%s</script>',
+			$nonce !== false ? sprintf( ' nonce="%s"', $nonce ) : '',
+			'window.applyPref=()=>{var e;try{const t=document.documentElement,i=window.localStorage.getItem("skin-citizen-theme"),n=window.localStorage.getItem("skin-citizen-fontsize"),l=window.localStorage.getItem("skin-citizen-pagewidth"),o=window.localStorage.getItem("skin-citizen-lineheight");null!==i&&(t.classList.remove(...(e="skin-citizen-",["auto","dark","light"].map(t=>e+t))),t.classList.add("skin-citizen-"+i)),null!==n&&t.style.setProperty("font-size",n),null!==l&&t.style.setProperty("--width-layout",l),null!==o&&t.style.setProperty("--line-height",o)}catch(t){}},window.applyPref();'
+		);
+
+		$out->addHeadItem( 'skin.citizen.inline', $script );
 	}
 }

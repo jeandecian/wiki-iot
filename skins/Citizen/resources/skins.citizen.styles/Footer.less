@@ -26,9 +26,6 @@
 }
 
 .mw-footer {
-	position: relative;
-	z-index: 8; // High enough so it covers the floating UI
-	margin-top: @margin-side * 2;
 	background: @color-footer-background-50;
 	clear: both;
 	color: @color-footer-text;
@@ -87,6 +84,12 @@
 		margin: @margin-side * 2.5 0 @margin-side / 2 0;
 		color: @base-90;
 		font-size: 20px;
+
+		img.mw-logo-wordmark {
+			width: auto;
+			height: 20px;
+			filter: invert( 1 ) hue-rotate( 180deg );
+		}
 	}
 
 	&-desc {

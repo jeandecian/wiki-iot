@@ -1,6 +1,7 @@
 .firstHeading {
 	margin: 0;
-	overflow-wrap: break-word; // Break word instead of overflow if title is too long
+	overflow-wrap: break-word;
+	word-break: break-word;
 }
 
 #siteSub {
@@ -15,20 +16,6 @@
 }
 
 #mw-content-text {
-	> .mw-parser-output {
-		/*
-		 * Interal link styles
-		 * Only apply to internal links in article
-		*/
-		a[ href^='/' ]:not( .image ):not( .external ) {
-			.link-content-text( var(--color-primary--hover) );
-
-			&.new {
-				background-image: linear-gradient( to right, var( --color-destructive--hover ) 0, var( --color-destructive--hover ) 100% );
-			}
-		}
-	}
-
 	.mw-parser-output {
 		& > h1,
 		& > h2,
@@ -42,7 +29,7 @@
 
 		.mw-editsection {
 			display: flex;
-			margin-left: 10px;
+			margin-left: auto;
 
 			a {
 				.resource-loader-icon-link-small;
@@ -74,15 +61,8 @@
 	}
 }
 
+.citizen-body,
 .mw-body-content {
-	p {
-		overflow-wrap: break-word;
-	}
-
-	table {
-		margin: 0;
-	}
-
 	h1,
 	h2,
 	h3,
@@ -101,8 +81,7 @@
 	h3,
 	h4,
 	h5,
-	h6,
-	p + p {
+	h6 {
 		margin-top: @content-margin-top * 2;
 	}
 
@@ -111,9 +90,14 @@
 	h3 + h4,
 	h4 + h5,
 	h5 + h6,
-	p,
 	table {
 		margin-top: @content-margin-top;
+	}
+
+	p {
+		margin-top: @content-margin-top;
+		margin-bottom: @content-margin-top;
+		overflow-wrap: break-word;
 	}
 
 	ul {
@@ -139,5 +123,21 @@
 	a.image {
 		display: block;
 		overflow: hidden;
+
+		> img {
+			transition: @transition-transform-quick;
+		}
 	}
+}
+
+.center {
+	width: 100%;
+	text-align: center;
+}
+
+.plainlist ol,
+.plainlist ul {
+	margin: 0;
+	line-height: inherit;
+	list-style: none none;
 }
