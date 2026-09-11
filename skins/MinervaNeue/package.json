@@ -13,7 +13,7 @@
 	},
 	"dependencies": {},
 	"devDependencies": {
-		"@babel/core": "7.7.7",
+		"@babel/core": "8.0.1",
 		"@storybook/html": "10.2.1",
 		"@wdio/cli": "5.22.4",
 		"@wdio/cucumber-framework": "5.23.0",
@@ -21,7 +21,7 @@
 		"@wdio/mocha-framework": "8.0.14",
 		"@wdio/spec-reporter": "5.22.4",
 		"@wdio/sync": "5.20.1",
-		"babel-loader": "8.0.6",
+		"babel-loader": "10.1.1"
 		"bundlesize": "0.18.2",
 		"eslint-config-wikimedia": "0.16.0",
 		"grunt": "1.6.3",
