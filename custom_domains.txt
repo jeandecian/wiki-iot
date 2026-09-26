@@ -13,11 +13,13 @@ internetsociety.ca
 iso.org
 isoc.de
 isoc.org
+medtech.tn
 mila.quebec
 mitacs.ca
 mitre.org
 nist.gov
 radio-canada.ca
+smu.tn
 springernature.com
 technologyreview.com
 qc.ca
